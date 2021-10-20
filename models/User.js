@@ -44,4 +44,52 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+  User.associate = models => {
+    User.hasMany(models.MyCourse, {
+      foreignKey: {
+        name: "userId",
+        allowNull: true,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    User.hasMany(models.UserQuiz, {
+      foreignKey: {
+        name: "userId",
+        allowNull: true,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    User.hasMany(models.UserAns, {
+      foreignKey: {
+        name: "userId",
+        allowNull: true,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    User.hasMany(models.Comment, {
+      foreignKey: {
+        name: "userId",
+        allowNull: true,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    User.hasMany(models.Feedback, {
+      foreignKey: {
+        name: "userId",
+        allowNull: true,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return User;
 };

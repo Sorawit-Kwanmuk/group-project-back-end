@@ -25,4 +25,17 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  SubTopic.associate = models => {
+    SubTopic.belongsTo(models.Topic, {
+      foreignKey: {
+        name: "topicId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return SubTopic;
 };

@@ -73,4 +73,26 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   });
+
+  Instructor.associate = models => {
+    Instructor.hasMany(models.InstructorCat, {
+      foreignKey: {
+        name: "instructorId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    Instructor.hasMany(models.Topic, {
+      foreignKey: {
+        name: "instructorId",
+        allowNull: true,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return Instructor;
 };

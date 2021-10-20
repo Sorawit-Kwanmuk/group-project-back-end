@@ -1,5 +1,5 @@
 //สร้าง table จาก models
-// const { sequelize } = require('./models');
+// const { sequelize } = require("./models");
 // sequelize.sync({
 //   force: true,
 // });

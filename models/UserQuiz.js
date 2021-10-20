@@ -12,4 +12,26 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  UserQuiz.associate = models => {
+    UserQuiz.belongsTo(models.Quiz, {
+      foreignKey: {
+        name: "quizId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    UserQuiz.belongsTo(models.User, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return UserQuiz;
 };

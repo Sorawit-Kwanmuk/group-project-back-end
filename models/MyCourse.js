@@ -22,4 +22,26 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
+
+  MyCourse.associate = models => {
+    MyCourse.belongsTo(models.Course, {
+      foreignKey: {
+        name: "courseId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    MyCourse.belongsTo(models.User, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return MyCourse;
 };

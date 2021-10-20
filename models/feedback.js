@@ -20,4 +20,16 @@ module.exports = (sequelize, DataTypes) => {
       underscroed: true,
     }
   );
+  Feedback.associate = models => {
+    Feedback.belongsTo(models.User, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return Feedback;
 };

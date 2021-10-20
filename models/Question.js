@@ -31,4 +31,26 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  Question.associate = models => {
+    Question.hasMany(models.UserAns, {
+      foreignKey: {
+        name: "questionId",
+        allowNull: true,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    Question.belongsTo(models.Quiz, {
+      foreignKey: {
+        name: "quizId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return Question;
 };

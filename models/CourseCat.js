@@ -1,10 +1,14 @@
 module.exports = (sequelize, DataTypes) => {
-  const Category = sequelize.define(
-    "Category",
+  const CourseCat = sequelize.define(
+    "CourseCat",
     {
-      categoryName: {
-        type: DataTypes.STRING,
-        allowNill: false,
+      categoryId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+      },
+      courseId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
       },
     },
     {
@@ -12,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Category.associate = models => {
-    Category.hasMany(models.CourseCat, {
+  CourseCat.associate = models => {
+    CourseCat.hasMany(models.Category, {
       foreignKey: {
         name: "categoryId",
         allowNull: false,
@@ -22,9 +26,9 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: "RESTRICT",
     });
 
-    Category.hasMany(models.InstructorCat, {
+    CourseCat.hasMany(models.Course, {
       foreignKey: {
-        name: "categoryId",
+        name: "courseId",
         allowNull: false,
       },
       onDelete: "RESTRICT",
@@ -32,5 +36,5 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
-  return Category;
+  return CourseCat;
 };

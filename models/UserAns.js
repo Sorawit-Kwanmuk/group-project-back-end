@@ -16,4 +16,25 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+  UserAns.associate = models => {
+    UserAns.belongsTo(models.User, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    UserAns.belongsTo(models.Question, {
+      foreignKey: {
+        name: "questionId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return UserAns;
 };

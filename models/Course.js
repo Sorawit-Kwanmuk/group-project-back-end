@@ -52,4 +52,53 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  Course.associate = models => {
+    Course.hasMany(models.Topic, {
+      foreignKey: {
+        name: "courseId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    Course.hasMany(models.Promotion, {
+      foreignKey: {
+        name: "courseId",
+        allowNull: true,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    Course.hasMany(models.CourseCat, {
+      foreignKey: {
+        name: "courseId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    Course.hasMany(models.Comment, {
+      foreignKey: {
+        name: "courseId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    Course.hasMany(models.MyCourse, {
+      foreignKey: {
+        name: "courseId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return Course;
 };

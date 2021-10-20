@@ -15,4 +15,17 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  Promotion.associate = models => {
+    Promotion.belongsTo(models.Course, {
+      foreignKey: {
+        name: "courseId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return Promotion;
 };

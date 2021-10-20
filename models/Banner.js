@@ -22,4 +22,5 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+  return Banner;
 };

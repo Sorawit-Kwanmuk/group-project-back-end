@@ -9,4 +9,44 @@ module.exports = (sequelize, DataTypes) => {
     },
     { underscored: true }
   );
+
+  Topic.associate = models => {
+    Topic.belongsTo(models.Instructor, {
+      foreignKey: {
+        name: "instructorId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    Topic.belongsTo(models.Course, {
+      foreignKey: {
+        name: "courseId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    Topic.hasMany(models.SubTopic, {
+      foreignKey: {
+        name: "topicId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+
+    Topic.hasMany(models.Quiz, {
+      foreignKey: {
+        name: "topicId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+      onUpdate: "RESTRICT",
+    });
+  };
+
+  return Topic;
 };
