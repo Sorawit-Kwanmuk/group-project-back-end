@@ -23,8 +23,11 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       mobileNo: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          isNumeric: true,
+        },
       },
       username: {
         type: DataTypes.STRING,
@@ -38,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         type: DataTypes.ENUM,
         values: ["guest", "user", "admin"],
+        defaultValue: "user",
       },
     },
     {
