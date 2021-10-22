@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       totalStage: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        defaultValue: 0,
       },
       rating: {
         type: DataTypes.DECIMAL(2, 2),
@@ -46,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         defaultValue: 0,
+      },
+      courseImage: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {

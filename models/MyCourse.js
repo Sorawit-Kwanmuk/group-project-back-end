@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       currentStage: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        defaultValue: 0,
       },
       duration: {
         type: DataTypes.DATEONLY,

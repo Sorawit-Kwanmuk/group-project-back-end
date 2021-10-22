@@ -37,9 +37,10 @@ exports.createInstructor = async (req, res, next) => {
       linkedin,
       twitter,
       profileImage,
-      categoryId, // [1,2]
+      categoryId,
     } = req.body;
     console.log(`fullName`, fullName);
+    console.log(`req.user.role`, req.user.role);
     if (req.user.role === "admin") {
       if (req.file) {
         const result = await uploadPromise(req.file.path);
@@ -58,22 +59,26 @@ exports.createInstructor = async (req, res, next) => {
           profileImage: result.secure_url,
         });
 
-        const input = categoryId.map(item => ({
+        let preparedInput = [];
+
+        if (typeof categoryId === "string") {
+          preparedInput.push(+categoryId);
+        } else {
+          categoryId.forEach(item => {
+            preparedInput.push(+item);
+          });
+        }
+        const input = preparedInput.map(item => ({
           instructorId: insResult.id,
           categoryId: item,
         }));
         console.log(`input`, input);
 
-        // const catmatch = await InstructorCat.bulkCreate([
-        //   {},
-        //   { instructorId: 10, categoryId: 2 },
-        // ]);
+        const catmatch = await InstructorCat.bulkCreate(input);
 
         fs.unlinkSync(req.file.path);
 
-        const catmatch = await InstructorCat.bulkCreate(input);
-
-        res.json({ insResult, catmatch });
+        return res.json({ insResult, catmatch });
       } else {
         const insResult = await Instructor.create({
           fullName,
@@ -88,7 +93,16 @@ exports.createInstructor = async (req, res, next) => {
           twitter,
         });
 
-        const input = categoryId.map(item => ({
+        let preparedInput = [];
+
+        if (typeof categoryId === "string") {
+          preparedInput.push(+categoryId);
+        } else {
+          categoryId.forEach(item => {
+            preparedInput.push(+item);
+          });
+        }
+        const input = preparedInput.map(item => ({
           instructorId: insResult.id,
           categoryId: item,
         }));
@@ -96,11 +110,11 @@ exports.createInstructor = async (req, res, next) => {
 
         const catmatch = await InstructorCat.bulkCreate(input);
 
-        res.json({ insResult, catmatch });
+        return res.json({ insResult, catmatch });
       }
     }
 
-    return res.status(401).json({ message: "you are unauthorized" });
+    res.status(401).json({ message: "you are unauthorized" });
   } catch (error) {
     next(error);
   }
@@ -121,68 +135,61 @@ exports.updateInstructor = async (req, res, next) => {
       linkedin,
       twitter,
       profileImage,
-      categoryId, // [1,2]
     } = req.body;
     if (req.user.role === "admin") {
       if (req.file) {
         const result = await uploadPromise(req.file.path);
-        const [rows] = await Instructor.update({
-          // 10
-          fullName,
-          jobTitle,
-          about,
-          expertise,
-          website,
-          email,
-          facebook,
-          youtube,
-          linkedin,
-          twitter,
-          profileImage: result.secure_url,
-        });
+        const [rows] = await Instructor.update(
+          {
+            // 10
+            fullName,
+            jobTitle,
+            about,
+            expertise,
+            website,
+            email,
+            facebook,
+            youtube,
+            linkedin,
+            twitter,
+            profileImage: result.secure_url,
+          },
+          {
+            where: {
+              id,
+            },
+          }
+        );
 
-        const input = categoryId.map(item => ({
-          instructorId: insResult.id,
-          categoryId: item,
-        }));
-        console.log(`input`, input);
-
-        fs.unlinkSync(req.file.path);
-
-        const catmatch = await InstructorCat.bulkCreate(input);
-
-        res.json({ insResult, catmatch });
+        return res.json([rows]);
       } else {
-        const insResult = await Instructor.update({
-          fullName,
-          jobTitle,
-          about,
-          expertise,
-          website,
-          email,
-          facebook,
-          youtube,
-          linkedin,
-          twitter,
-        });
+        const [rows] = await Instructor.update(
+          {
+            fullName,
+            jobTitle,
+            about,
+            expertise,
+            website,
+            email,
+            facebook,
+            youtube,
+            linkedin,
+            twitter,
+          },
+          {
+            where: {
+              id,
+            },
+          }
+        );
 
-        // const input = categoryId.map(item => ({
-        //   instructorId: insResult.id,
-        //   categoryId: item,
-        // }));
-        // console.log(`input`, input);
-
-        // const catmatch = await InstructorCat.bulkCreate(input);
-        // const catmatch = await InstructorCat.bulkCreate(input);
-
-        res.json({
-          insResult,
-          // catmatch
-        });
+        return res.json([rows]);
       }
     }
     return res.status(401).json({ message: "you are unauthorized" });
-  } catch (error) {}
+  } catch (error) {
+    next(error.message);
+  }
 };
 
 exports.deleteInstructor = async (req, res, next) => {
@@ -197,7 +204,7 @@ exports.deleteInstructor = async (req, res, next) => {
       });
       console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete waste" });
+        return res.status(400).json({ message: "fail to delete instructor" });
       }
 
       res.status(204).json({ message: "Delete Successfully" });

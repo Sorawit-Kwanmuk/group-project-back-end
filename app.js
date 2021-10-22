@@ -1,7 +1,7 @@
 // สร้าง table จาก models
 // const { sequelize } = require("./models");
 // sequelize.sync({
-//   force: true,
+//   force: false,
 // });
 
 require("dotenv").config();
@@ -16,7 +16,9 @@ const authRoute = require("./route/authRoute");
 const categoryRoute = require("./route/categoryRoute");
 const instructorRoute = require("./route/instructorRoute");
 const instructorCatRoute = require("./route/instructorCatRoute");
+// var bodyParser = require("body-parser");
 
+// app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
