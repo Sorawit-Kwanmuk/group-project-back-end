@@ -13,11 +13,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
+      paranoid: true,
     }
   );
 
   CourseCat.associate = models => {
-    CourseCat.hasMany(models.Category, {
+    CourseCat.belongsTo(models.Category, {
       foreignKey: {
         name: "categoryId",
         allowNull: false,
@@ -26,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: "RESTRICT",
     });
 
-    CourseCat.hasMany(models.Course, {
+    CourseCat.belongsTo(models.Course, {
       foreignKey: {
         name: "courseId",
         allowNull: false,

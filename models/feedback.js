@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscroed: true,
+      paranoid: true,
     }
   );
   Feedback.associate = models => {
