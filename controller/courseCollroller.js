@@ -7,8 +7,6 @@ const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const express = require("express");
 
-const a = 15;
-
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 
 // exports.getAllCourse = async (req,res,next) => {
