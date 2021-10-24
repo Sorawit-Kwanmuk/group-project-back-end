@@ -18,6 +18,8 @@ const instructorRoute = require("./route/instructorRoute");
 const instructorCatRoute = require("./route/instructorCatRoute");
 const courseRoute = require("./route/courseRoute");
 const courseCatRoute = require("./route/courseCatRoute");
+const bannerRoute = require("./route/bannerRoute");
+const feedbackRoute = require("./route/feedbackRoute");
 // var bodyParser = require("body-parser");
 
 // app.use(bodyParser.json());
@@ -32,6 +34,8 @@ app.use("/instructor", instructorRoute);
 app.use("/insCat", instructorCatRoute);
 app.use("/course", courseRoute);
 app.use("/courseCat", courseCatRoute);
+app.use("/banner", bannerRoute);
+app.use("/feedback", feedbackRoute);
 
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 //path not found handling middleware

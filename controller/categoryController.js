@@ -27,7 +27,7 @@ exports.createCat = async (req, res, next) => {
       const category = await Category.create({
         categoryName,
       });
-      res.status(201).json({ category });
+      return res.status(201).json({ category });
     }
     return res.status(401).json({ message: "you are unauthorized" });
   } catch (err) {
