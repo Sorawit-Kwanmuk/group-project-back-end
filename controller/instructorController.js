@@ -23,6 +23,16 @@ exports.getAllInstructor = async (req, res, next) => {
   }
 };
 
+exports.getInstructorById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const instructorResult = await Instructor.findOne({ where: { id } });
+    res.json({ instructorResult });
+  } catch (error) {
+    next(err.message);
+  }
+};
+
 exports.createInstructor = async (req, res, next) => {
   try {
     const {

@@ -1,7 +1,7 @@
 // สร้าง table จาก models
 // const { sequelize } = require("./models");
 // sequelize.sync({
-//   force: false,
+//   force: true,
 // });
 
 require("dotenv").config();
@@ -16,6 +16,8 @@ const authRoute = require("./route/authRoute");
 const categoryRoute = require("./route/categoryRoute");
 const instructorRoute = require("./route/instructorRoute");
 const instructorCatRoute = require("./route/instructorCatRoute");
+const courseRoute = require("./route/courseRoute");
+const courseCatRoute = require("./route/courseCatRoute");
 // var bodyParser = require("body-parser");
 
 // app.use(bodyParser.json());
@@ -28,6 +30,8 @@ app.use("/auth", authRoute);
 app.use("/category", categoryRoute);
 app.use("/instructor", instructorRoute);
 app.use("/insCat", instructorCatRoute);
+app.use("/course", courseRoute);
+app.use("/courseCat", courseCatRoute);
 
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 //path not found handling middleware

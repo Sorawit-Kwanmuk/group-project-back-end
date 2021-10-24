@@ -14,6 +14,26 @@ exports.getAllInstructorCat = async (req, res, next) => {
   }
 };
 
+exports.getInstructorCatByInstructor = async (req, res, next) => {
+  try {
+    const { instructorId } = req.params;
+    const result = await InstructorCat.findAll({ where: { instructorId } });
+    res.json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getInstructorCatByCat = async (req, res, next) => {
+  try {
+    const { categoryId } = req.params;
+    const result = await InstructorCat.findAll({ where: { categoryId } });
+    res.json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.addInstructorCat = async (req, res, next) => {
   try {
     const { instructorId, categoryId } = req.body;
@@ -23,8 +43,9 @@ exports.addInstructorCat = async (req, res, next) => {
         instructorId,
         categoryId,
       });
-      res.json({ instructorId, categoryId });
+      return res.json({ instructorId, categoryId });
     }
+    return res.status(401).json({ message: "you are unauthorized" });
   } catch (error) {
     next(error.message);
   }
