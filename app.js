@@ -6,6 +6,11 @@
 
 require("dotenv").config();
 const multer = require("multer");
+const omise = require("omise")({
+  publicKey: process.env.OMISE_PUBLIC_KEY,
+  secretKey: process.env.OMISE_SECRET_KEY,
+});
+
 const cors = require("cors");
 const express = require("express");
 const passport = require("passport");
@@ -20,6 +25,9 @@ const courseRoute = require("./route/courseRoute");
 const courseCatRoute = require("./route/courseCatRoute");
 const bannerRoute = require("./route/bannerRoute");
 const feedbackRoute = require("./route/feedbackRoute");
+const promotionRoute = require("./route/promotionRoute");
+const checkoutRoute = require("./route/checkoutRoute");
+const Omise = require("omise");
 // var bodyParser = require("body-parser");
 
 // app.use(bodyParser.json());
@@ -36,6 +44,9 @@ app.use("/course", courseRoute);
 app.use("/courseCat", courseCatRoute);
 app.use("/banner", bannerRoute);
 app.use("/feedback", feedbackRoute);
+app.use("/promotion", promotionRoute);
+
+app.use("/checkout", checkoutRoute);
 
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 //path not found handling middleware
