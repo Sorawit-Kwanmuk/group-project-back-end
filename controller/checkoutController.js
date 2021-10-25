@@ -2,25 +2,30 @@ const omise = require("omise")({
   publicKey: process.env.OMISE_PUBLIC_KEY,
   secretKey: process.env.OMISE_SECRET_KEY,
 });
-exports.createCheckout = async (req, res, next) => {
-  const { amount, token } = req.body;
-  try {
-    const customer = await omise.customers.create({
-      userId: req.user.id,
-      email: req.user.email,
-      description: req.user.fullName,
-      amount,
-      card: token,
-    });
-    console.log(`customer`, customer);
+const { Course } = require("../models");
 
+// const myCourse = require("../");
+
+exports.createCheckout = async (req, res, next) => {
+  const { token, courseId, price } = req.body;
+
+  const find = await Course.findOne({ where: { id: courseId } });
+  console.log(`find`, find.price);
+
+  try {
     const charge = await omise.charges.create({
-      amount: 10000,
+      amount: price,
       currency: "thb",
-      customer: customer.id,
+      card: token,
+      metadata: { courseId: courseId, user: req.user.id },
     });
     console.log(`charge -------> `, charge);
+
+    // if (charge.status === "successful") {
+    //   const myCourse = await Course.create({});
+    // }
+    return res.json(charge);
   } catch (error) {
-    next(error.message);
+    next(error);
   }
 };
