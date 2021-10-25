@@ -2,30 +2,45 @@ const omise = require("omise")({
   publicKey: process.env.OMISE_PUBLIC_KEY,
   secretKey: process.env.OMISE_SECRET_KEY,
 });
-const { Course } = require("../models");
-
-// const myCourse = require("../");
+const { Course, MyCourse } = require("../models");
 
 exports.createCheckout = async (req, res, next) => {
-  const { token, courseId, price } = req.body;
+  const { token, courseId } = req.body;
 
   const find = await Course.findOne({ where: { id: courseId } });
-  console.log(`find`, find.price);
+  const price = +find.price;
+  const updateLearner = +find.learner;
+  console.log(`find`, price);
+  console.log(`learner`, +find.learner);
 
   try {
     const charge = await omise.charges.create({
-      amount: price,
+      amount: price * 100,
       currency: "thb",
       card: token,
       metadata: { courseId: courseId, user: req.user.id },
     });
     console.log(`charge -------> `, charge);
 
-    // if (charge.status === "successful") {
-    //   const myCourse = await Course.create({});
-    // }
-    return res.json(charge);
+    if (charge.status === "successful") {
+      const myCourse = await MyCourse.create({
+        userId: req.user.id,
+        courseId,
+        totalStage: find.totalStage,
+        duration: find.duration,
+        price: find.price,
+      });
+
+      const enroll = await find.update({
+        learner: updateLearner + 1,
+      });
+      return res.json({
+        charge,
+        myCourse,
+        enroll,
+      });
+    }
   } catch (error) {
-    next(error);
+    next(error.message);
   }
 };
