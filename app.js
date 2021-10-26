@@ -27,8 +27,10 @@ const bannerRoute = require("./route/bannerRoute");
 const feedbackRoute = require("./route/feedbackRoute");
 const promotionRoute = require("./route/promotionRoute");
 const checkoutRoute = require("./route/checkoutRoute");
+const subTopicRoute = require("./route/subTopicRoute");
 const Omise = require("omise");
 const topicRoute = require("./route/topicRoute");
+const commentRoute = require("./route/commentRoute");
 // var bodyParser = require("body-parser");
 
 // app.use(bodyParser.json());
@@ -48,6 +50,8 @@ app.use("/feedback", feedbackRoute);
 app.use("/promotion", promotionRoute);
 app.use("/topic", topicRoute);
 app.use("/checkout", checkoutRoute);
+app.use("/subtopic", subTopicRoute);
+app.use("/comment", commentRoute);
 
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 //path not found handling middleware
