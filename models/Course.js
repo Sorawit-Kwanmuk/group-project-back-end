@@ -39,11 +39,16 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 0,
       },
       rating: {
-        type: DataTypes.DECIMAL(2, 2),
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
         defaultValue: 0,
       },
       ratingAmount: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+      },
+      ratingTotal: {
         type: DataTypes.INTEGER,
         allowNull: true,
         defaultValue: 0,
@@ -57,7 +62,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+
+      discountRate: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      discountUntil: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
     },
+
     {
       underscored: true,
       paranoid: true,

@@ -55,6 +55,8 @@ exports.createCourse = async (req, res, next) => {
       clip,
       courseImage,
       categoryId,
+      discountRate,
+      discountUntil,
     } = req.body;
     console.log(req.body);
     if (req.user.role === 'admin') {
@@ -68,6 +70,8 @@ exports.createCourse = async (req, res, next) => {
         level,
         clip,
         courseImage: result.secure_url,
+        discountRate,
+        discountUntil,
       });
       console.log(`courseResult`, courseResult);
       let preparedInput = [];
@@ -106,6 +110,8 @@ exports.updateCourse = async (req, res, next) => {
       level,
       clip,
       courseImage,
+      discountRate,
+      discountUntil,
     } = req.body;
     if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
@@ -120,6 +126,8 @@ exports.updateCourse = async (req, res, next) => {
           level,
           clip,
           courseImage: result.secure_url,
+          discountRate,
+          discountUntil,
         },
         {
           where: {
