@@ -43,6 +43,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: 0,
       },
+      ratingAmount: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+      },
       learner: {
         type: DataTypes.INTEGER,
         allowNull: true,
