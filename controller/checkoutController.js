@@ -9,9 +9,11 @@ exports.createCheckout = async (req, res, next) => {
 
   const find = await Course.findOne({ where: { id: courseId } });
   const price = +find.price;
+
   const updateLearner = +find.learner;
   console.log(`find`, price);
   console.log(`learner`, +find.learner);
+  console.log(`discount`, discount);
 
   try {
     const charge = await omise.charges.create({

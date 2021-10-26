@@ -1,6 +1,7 @@
 const { Course } = require("../models");
 const { CourseCat } = require("../models");
 const { Category } = require("../models");
+const { Promotion } = require("../models");
 const utils = require("util");
 const fs = require("fs");
 const multer = require("multer");
@@ -20,7 +21,10 @@ const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 exports.getAllCourse = async (req, res, next) => {
   try {
     const courseResult = await Course.findAll({
-      include: { model: CourseCat, include: { model: Category } },
+      include: [
+        { model: CourseCat, include: { model: Category } },
+        { model: Promotion },
+      ],
     });
     res.json({ courseResult });
   } catch (error) {
