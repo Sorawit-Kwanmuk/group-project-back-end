@@ -17,7 +17,8 @@ const upload = multer({
   }),
 });
 
-router.get("/", courseController.getAllCourse);
+router.get("/byrating", courseController.getAllCoursebyRating);
+router.get("/bypromotion", courseController.getAllCourseByPro);
 router.get("/:id", authenticate, courseController.getCourseById);
 router.post(
   "/",

@@ -18,13 +18,29 @@ const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 //     }
 // }
 
-exports.getAllCourse = async (req, res, next) => {
+exports.getAllCoursebyRating = async (req, res, next) => {
   try {
     const courseResult = await Course.findAll({
       include: [
         { model: CourseCat, include: { model: Category } },
         { model: Promotion },
       ],
+      order: [["rating", "DESC"]],
+    });
+    res.json({ courseResult });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getAllCourseByPro = async (req, res, next) => {
+  try {
+    const courseResult = await Course.findAll({
+      include: [
+        { model: CourseCat, include: { model: Category } },
+        { model: Promotion },
+      ],
+      order: [["discountRate", "DESC"]],
     });
     res.json({ courseResult });
   } catch (error) {
