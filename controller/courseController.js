@@ -20,7 +20,7 @@ const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 exports.getAllCourse = async (req, res, next) => {
   try {
     const courseResult = await Course.findAll({
-      include: { model: CourseCat, include: { model: Category } },
+      include: { model: CourseCat, include: { model: Category }},
     });
     res.json({ courseResult });
   } catch (error) {
