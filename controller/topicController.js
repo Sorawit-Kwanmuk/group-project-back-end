@@ -1,8 +1,8 @@
-const { Topic, Instructor, Course } = require("../models");
+const { Topic, Instructor, Course } = require('../models');
 
 exports.createTopic = async (req, res, next) => {
   try {
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const { topicName, courseId, instructorId } = req.body;
       const result = await Topic.create({
         topicName,
@@ -11,7 +11,7 @@ exports.createTopic = async (req, res, next) => {
       });
       return res.json({ result });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error);
   }
@@ -21,8 +21,8 @@ exports.getAllTopic = async (req, res, next) => {
   try {
     const result = await Topic.findAll({
       include: [
-        { model: Course, attributes: ["courseName"] },
-        { model: Instructor, attributes: ["fullName"] },
+        { model: Course, attributes: ['courseName'] },
+        { model: Instructor, attributes: ['fullName'] },
       ],
     });
     return res.json({ result });
@@ -45,7 +45,7 @@ exports.updateTopic = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { topicName, courseId, instructorId } = req.body;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const [rows] = await Topic.update(
         {
           topicName,
@@ -61,7 +61,7 @@ exports.updateTopic = async (req, res, next) => {
 
       return res.json([rows]);
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
@@ -70,20 +70,20 @@ exports.updateTopic = async (req, res, next) => {
 exports.deleteTopic = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const rows = await Topic.destroy({
         where: {
           id,
         },
       });
-      console.log(rows);
+      // console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete Topic" });
+        return res.status(400).json({ message: 'fail to delete Topic' });
       }
 
-      return res.status(204).json({ message: "Delete Successfully" });
+      return res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }

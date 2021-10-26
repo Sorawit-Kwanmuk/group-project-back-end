@@ -25,7 +25,7 @@ exports.getAllCoursebyRating = async (req, res, next) => {
         { model: CourseCat, include: { model: Category } },
         { model: Promotion },
       ],
-      order: [["rating", "DESC"]],
+      order: [['rating', 'DESC']],
     });
     res.json({ courseResult });
   } catch (error) {
@@ -40,9 +40,9 @@ exports.getAllCourseByPro = async (req, res, next) => {
         { model: CourseCat, include: { model: Category } },
         { model: Promotion },
       ],
-      order: [["discountRate", "DESC"]],
+      order: [['discountRate', 'DESC']],
     });
-    console.log('courseResult: ', courseResult);
+    // console.log('courseResult: ', courseResult);
     res.json({ courseResult });
   } catch (error) {
     next(error);
@@ -74,7 +74,7 @@ exports.createCourse = async (req, res, next) => {
       discountRate,
       discountUntil,
     } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
       const courseResult = await Course.create({
@@ -89,7 +89,7 @@ exports.createCourse = async (req, res, next) => {
         discountRate,
         discountUntil,
       });
-      console.log(`courseResult`, courseResult);
+      // console.log(`courseResult`, courseResult);
       let preparedInput = [];
 
       if (typeof categoryId === 'string') {
@@ -169,7 +169,7 @@ exports.deleteCourse = async (req, res, next) => {
           id,
         },
       });
-      console.log(rows);
+      // console.log(rows);
       if (rows === 0) {
         return res.status(400).json({ message: 'fail to delete Course' });
       }

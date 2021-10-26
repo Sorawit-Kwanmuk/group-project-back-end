@@ -1,5 +1,5 @@
-const { Comment } = require("../models");
-const { Course } = require("../models");
+const { Comment } = require('../models');
+const { Course } = require('../models');
 
 exports.createComment = async (req, res, next) => {
   try {
@@ -17,18 +17,18 @@ exports.createComment = async (req, res, next) => {
       courseId,
     });
     // console.log(`result`, result);
-    console.log(`rating ---->`, courseRating);
-    console.log(`result.rating ---->`, result.rating);
-    console.log(`courseRatingAmount ---->`, courseRatingAmount);
+    // console.log(`rating ---->`, courseRating);
+    // console.log(`result.rating ---->`, result.rating);
+    // console.log(`courseRatingAmount ---->`, courseRatingAmount);
     const totalRating =
       (+courseRatingTotal + +result.rating) / (courseRatingAmount + 1);
-    console.log(`typeof totalRating`, typeof totalRating);
+    // console.log(`typeof totalRating`, typeof totalRating);
     const updateCourse = await find.update({
       ratingAmount: courseRatingAmount + 1,
       rating: totalRating.toFixed(2),
       ratingTotal: courseRatingTotal + result.rating,
     });
-    console.log(`updateCourse`, updateCourse);
+    // console.log(`updateCourse`, updateCourse);
 
     return res.json({ result, updateCourse });
   } catch (error) {

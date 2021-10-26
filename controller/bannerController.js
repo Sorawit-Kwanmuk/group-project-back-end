@@ -1,8 +1,8 @@
-const { Banner } = require("../models");
-const utils = require("util");
-const fs = require("fs");
-const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
+const { Banner } = require('../models');
+const utils = require('util');
+const fs = require('fs');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
 
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 
@@ -28,7 +28,7 @@ exports.getBannerById = async (req, res, next) => {
 exports.createBanner = async (req, res, next) => {
   try {
     const { name, image, link } = req.body;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const upload = await uploadPromise(req.file.path);
       const result = await Banner.create({
         name,
@@ -38,7 +38,7 @@ exports.createBanner = async (req, res, next) => {
       fs.unlinkSync(req.file.path);
       return res.status(201).json({ result });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {
     next(err);
   }
@@ -48,7 +48,7 @@ exports.updateBanner = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name, image, link } = req.body;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
       const [rows] = await Banner.update(
         {
@@ -65,7 +65,7 @@ exports.updateBanner = async (req, res, next) => {
 
       return res.json([rows]);
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
@@ -74,20 +74,20 @@ exports.updateBanner = async (req, res, next) => {
 exports.deleteBanner = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const rows = await Banner.destroy({
         where: {
           id,
         },
       });
-      console.log(rows);
+      // console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete Course" });
+        return res.status(400).json({ message: 'fail to delete Course' });
       }
 
-      return res.status(204).json({ message: "Delete Successfully" });
+      return res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }

@@ -1,4 +1,4 @@
-const { Category } = require("../models");
+const { Category } = require('../models');
 
 exports.getAllCat = async (req, res, next) => {
   try {
@@ -23,13 +23,13 @@ exports.createCat = async (req, res, next) => {
   try {
     const { categoryName } = req.body;
 
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const category = await Category.create({
         categoryName,
       });
       return res.status(201).json({ category });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {
     next(err);
   }
@@ -39,7 +39,7 @@ exports.updateCat = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { categoryName } = req.body;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const [rows] = await Category.update(
         { categoryName },
         {
@@ -49,12 +49,12 @@ exports.updateCat = async (req, res, next) => {
         }
       );
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to update category" });
+        return res.status(400).json({ message: 'fail to update category' });
       }
 
-      res.status(200).json({ message: "success update category" });
+      res.status(200).json({ message: 'success update category' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {
     next(err.message);
   }
@@ -64,20 +64,20 @@ exports.deleteCat = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const rows = await Category.destroy({
         where: {
           id,
         },
       });
-      console.log(rows);
+      // console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete category" });
+        return res.status(400).json({ message: 'fail to delete category' });
       }
 
-      res.status(204).json({ message: "Delete Successfully" });
+      res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {
     next(err);
   }
