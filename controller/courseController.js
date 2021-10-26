@@ -1,11 +1,12 @@
-const { Course } = require("../models");
-const { CourseCat } = require("../models");
-const { Category } = require("../models");
-const utils = require("util");
-const fs = require("fs");
-const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
-const express = require("express");
+const { Course } = require('../models');
+const { CourseCat } = require('../models');
+const { Category } = require('../models');
+const { Promotion } = require('../models');
+const utils = require('util');
+const fs = require('fs');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const express = require('express');
 
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 
@@ -20,8 +21,12 @@ const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 exports.getAllCourse = async (req, res, next) => {
   try {
     const courseResult = await Course.findAll({
-      include: { model: CourseCat, include: { model: Category }},
+      include: [
+        { model: CourseCat, include: { model: Category } },
+        { model: Promotion },
+      ],
     });
+    console.log('courseResult: ', courseResult);
     res.json({ courseResult });
   } catch (error) {
     next(error);
@@ -52,7 +57,7 @@ exports.createCourse = async (req, res, next) => {
       categoryId,
     } = req.body;
     console.log(req.body);
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
       const courseResult = await Course.create({
         courseName,
@@ -67,7 +72,7 @@ exports.createCourse = async (req, res, next) => {
       console.log(`courseResult`, courseResult);
       let preparedInput = [];
 
-      if (typeof categoryId === "string") {
+      if (typeof categoryId === 'string') {
         preparedInput.push(+categoryId);
       } else {
         categoryId.forEach(item => {
@@ -83,7 +88,7 @@ exports.createCourse = async (req, res, next) => {
 
       res.json({ courseResult, catmatch });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
@@ -102,7 +107,7 @@ exports.updateCourse = async (req, res, next) => {
       clip,
       courseImage,
     } = req.body;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
       const [rows] = await Course.update(
         {
@@ -125,7 +130,7 @@ exports.updateCourse = async (req, res, next) => {
 
       return res.json([rows]);
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {
     next(err.message);
   }
@@ -134,7 +139,7 @@ exports.updateCourse = async (req, res, next) => {
 exports.deleteCourse = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const rows = await Course.destroy({
         where: {
           id,
@@ -142,12 +147,12 @@ exports.deleteCourse = async (req, res, next) => {
       });
       console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete Course" });
+        return res.status(400).json({ message: 'fail to delete Course' });
       }
 
-      return res.status(204).json({ message: "Delete Successfully" });
+      return res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
