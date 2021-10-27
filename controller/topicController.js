@@ -20,10 +20,7 @@ exports.createTopic = async (req, res, next) => {
 exports.getAllTopic = async (req, res, next) => {
   try {
     const result = await Topic.findAll({
-      include: [
-        { model: Course, attributes: ['courseName'] },
-        { model: Instructor, attributes: ['fullName'] },
-      ],
+      include: [{ model: Course }, { model: Instructor }],
     });
     return res.json({ result });
   } catch (error) {
@@ -36,10 +33,7 @@ exports.getTopicById = async (req, res, next) => {
     const { id } = req.params;
     const result = await Topic.findOne({
       where: { id },
-      include: [
-        { model: Course, attributes: ['courseName'] },
-        { model: Instructor, attributes: ['fullName'] },
-      ],
+      include: [{ model: Course }, { model: Instructor }],
     });
     res.json({ result });
   } catch (err) {
@@ -52,10 +46,7 @@ exports.getTopicByInsId = async (req, res, next) => {
     const { id } = req.params;
     const result = await Topic.findAll({
       where: { instructorId: id },
-      include: [
-        { model: Course, attributes: ['courseName'] },
-        { model: Instructor, attributes: ['fullName'] },
-      ],
+      include: [{ model: Course }, { model: Instructor }],
     });
     res.json({ result });
   } catch (err) {
