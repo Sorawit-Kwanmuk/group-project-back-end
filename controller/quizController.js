@@ -50,18 +50,28 @@ exports.createQuiz = async (req, res, next) => {
 
       const findTopic = await Topic.findOne({ where: { id: topicId } });
       const topicCourse = +findTopic.courseId;
-      console.log(`findTopic`, findTopic);
-      console.log(`topicCourse`, topicCourse);
+      //   console.log(`findTopic`, findTopic);
+      //   console.log(`topicCourse`, topicCourse);
       const CourseIncreaseStage = await Course.findOne({
         where: { id: +topicCourse },
       });
       const currentStage = CourseIncreaseStage.totalStage;
 
-      console.log(`CourseIncreaseStage`, CourseIncreaseStage);
+      //   console.log(`CourseIncreaseStage`, CourseIncreaseStage);
 
       const increase = await CourseIncreaseStage.update({
         totalStage: currentStage + 1,
       });
+
+      const findQuiz = await Quiz.findOne({
+        where: { id: +result.id },
+      });
+
+      const increaseScoreQuiz = await findQuiz.update({
+        score: findQuiz.score + questionList.length,
+      });
+
+      //   console.log(`increaseScoreQuiz`, increaseScoreQuiz);
       return res.json({ result, increase });
     }
     return res.status(401).json({ message: "you are unauthorized" });
