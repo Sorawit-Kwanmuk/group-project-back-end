@@ -50,8 +50,8 @@ exports.getTopicById = async (req, res, next) => {
 exports.getTopicByInsId = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await Topic.findOne({
-      where: { InstructorId: id },
+    const result = await Topic.findAll({
+      where: { instructorId: id },
       include: [
         { model: Course, attributes: ["courseName"] },
         { model: Instructor, attributes: ["fullName"] },

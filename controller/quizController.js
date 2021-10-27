@@ -36,6 +36,11 @@ exports.createQuiz = async (req, res, next) => {
         const createQuestion = await Question.bulkCreate(withoutImage);
       }
 
+      if (withImage) {
+        const result = await uploadPromise(req.file.path);
+        const courseResult = await Course.bulkCreate({ withImage });
+      }
+
       //   console.log(`questionArray`, questionArray);
 
       //   console.log(`questionList`, questionList);
