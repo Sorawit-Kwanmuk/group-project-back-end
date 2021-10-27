@@ -32,7 +32,7 @@ exports.getInstructorById = async (req, res, next) => {
     });
     res.json({ instructorResult });
   } catch (error) {
-    next(err.message);
+    next(error.message);
   }
 };
 

@@ -11,7 +11,7 @@ exports.getAllBanner = async (req, res, next) => {
     const result = await Banner.findAll();
     res.json({ result });
   } catch (error) {
-    next(err.message);
+    next(error.message);
   }
 };
 

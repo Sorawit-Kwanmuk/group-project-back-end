@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/", topicController.getAllTopic);
 router.get("/:id", authenticate, topicController.getTopicById);
+router.get("/ins/:id", authenticate, topicController.getTopicByInsId);
 router.post("/", authenticate, topicController.createTopic);
 router.put("/:id", authenticate, topicController.updateTopic);
 router.delete("/:id", authenticate, topicController.deleteTopic);
