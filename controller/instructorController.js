@@ -26,7 +26,10 @@ exports.getAllInstructor = async (req, res, next) => {
 exports.getInstructorById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const instructorResult = await Instructor.findOne({ where: { id } });
+    const instructorResult = await Instructor.findOne({
+      where: { id },
+      include: { model: InstructorCat, include: { model: Category } },
+    });
     res.json({ instructorResult });
   } catch (error) {
     next(err.message);

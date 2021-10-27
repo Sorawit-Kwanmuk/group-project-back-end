@@ -1,12 +1,13 @@
-const { Course } = require('../models');
-const { CourseCat } = require('../models');
-const { Category } = require('../models');
-const { Promotion } = require('../models');
-const utils = require('util');
-const fs = require('fs');
-const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
-const express = require('express');
+const { Course } = require("../models");
+const { CourseCat } = require("../models");
+const { Category } = require("../models");
+const { Promotion, Instructor, Topic } = require("../models");
+const utils = require("util");
+const fs = require("fs");
+const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const express = require("express");
+const { Op } = require("sequelize");
 
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 
@@ -20,6 +21,11 @@ const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 
 exports.getAllCoursebyRating = async (req, res, next) => {
   try {
+    // const findTopic = await Topic.findAll({ where: { courseId: id } });
+    // const mapTopic = findTopic.map(item => item.instructorId);
+    // const findIns = await Instructor.findAll({
+    //   where: { id: { [Op.or]: mapTopic } },
+    // });
     const courseResult = await Course.findAll({
       include: [
         { model: CourseCat, include: { model: Category } },
@@ -27,7 +33,10 @@ exports.getAllCoursebyRating = async (req, res, next) => {
       ],
       order: [['rating', 'DESC']],
     });
-    res.json({ courseResult });
+    res.json({
+      courseResult,
+      // findIns
+    });
   } catch (error) {
     next(error);
   }
@@ -53,10 +62,13 @@ exports.getAllCourseByPro = async (req, res, next) => {
 exports.getCourseById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const courseResult = await Course.findOne({ where: { id } });
+    const courseResult = await Course.findOne({
+      where: { id },
+      include: { model: Topic, include: { model: Instructor } },
+    });
     res.json({ courseResult });
   } catch (error) {
-    next(err.message);
+    next(error.message);
   }
 };
 

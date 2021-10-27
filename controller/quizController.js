@@ -1,15 +1,42 @@
-const { Topic, Quiz } = require('../models');
+const { Topic, Quiz, Course, Question } = require("../models");
 
 exports.createQuiz = async (req, res, next) => {
   try {
-    if (req.user.role === 'admin') {
-      const { quizName, score, topicId } = req.body;
+    if (req.user.role === "admin") {
+      const { quizName, topicId, questionArray } = req.body;
       const result = await Quiz.create({
         quizName,
-        score,
         topicId,
       });
-      return res.json({ result });
+
+      const questionList = questionArray.map(item => {
+        return { ...item, quizId: result.id };
+      });
+
+      const createQuestion = await Question.bulkCreate(questionList);
+
+      console.log(`questionArray`, questionArray);
+
+      console.log(`questionList`, questionList);
+      //   const questionItem = questionList.map(item => {
+      //     return {question : item.question};
+      //   });
+
+      const findTopic = await Topic.findOne({ where: { id: topicId } });
+      const topicCourse = +findTopic.courseId;
+      console.log(`findTopic`, findTopic);
+      console.log(`topicCourse`, topicCourse);
+      const CourseIncreaseStage = await Course.findOne({
+        where: { id: +topicCourse },
+      });
+      const currentStage = CourseIncreaseStage.totalStage;
+
+      console.log(`CourseIncreaseStage`, CourseIncreaseStage);
+
+      const increase = await CourseIncreaseStage.update({
+        totalStage: currentStage + 1,
+      });
+      return res.json({ result, increase });
     }
     return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
@@ -33,7 +60,10 @@ exports.getQuizById = async (req, res, next) => {
     const { id } = req.params;
     const result = await Quiz.findOne({
       where: { id },
-      include: { model: Topic, attributes: ['topicName'] },
+      include: [
+        { model: Topic, attributes: ["topicName"] },
+        { model: Question },
+      ],
     });
     res.json({ result });
   } catch (err) {
@@ -44,14 +74,11 @@ exports.getQuizById = async (req, res, next) => {
 exports.updateQuiz = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { subTopName, video, document, topicId } = req.body;
-    if (req.user.role === 'admin') {
-      const [rows] = await SubTopic.update(
+    const { quizName } = req.body;
+    if (req.user.role === "admin") {
+      const [rows] = await Quiz.update(
         {
-          subTopName,
-          video,
-          document,
-          topicId,
+          quizName,
         },
         {
           where: {
@@ -68,18 +95,38 @@ exports.updateQuiz = async (req, res, next) => {
   }
 };
 
-exports.deleteSubTopic = async (req, res, next) => {
+exports.deleteQuiz = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (req.user.role === 'admin') {
-      const rows = await SubTopic.destroy({
+    if (req.user.role === "admin") {
+      const findQuiz = await Quiz.findOne({ where: { id } });
+
+      const findTopic = await Topic.findOne({
+        where: { id: findQuiz.topicId },
+      });
+
+      const topicCourse = +findTopic.courseId;
+
+      const CourseDecreaseStage = await Course.findOne({
+        where: { id: +topicCourse },
+      });
+      const currentStage = CourseDecreaseStage.totalStage;
+
+      //   console.log(`CourseIncreaseStage`, CourseDecreaseStage);
+
+      const decrease = await CourseDecreaseStage.update({
+        totalStage: currentStage - 1,
+      });
+      //   console.log(`decrease`, decrease);
+
+      const rows = await Quiz.destroy({
         where: {
           id,
         },
       });
       // console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: 'fail to delete Sub Topic' });
+        return res.status(400).json({ message: "fail to delete Quiz" });
       }
 
       return res.status(204).json({ message: 'Delete Successfully' });

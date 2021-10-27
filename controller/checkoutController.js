@@ -27,7 +27,9 @@ exports.createCheckout = async (req, res, next) => {
     where: { id: { [Op.or]: mapTopic } },
   });
 
-  // console.log(`<--- findIns --->`, findIns);
+  // const mapLearner = findIns.map(item => item.learner);
+
+  // console.log(`<--- findIns --->`, mapLearner);
 
   try {
     const charge = await omise.charges.create({
@@ -49,6 +51,12 @@ exports.createCheckout = async (req, res, next) => {
 
       const enroll = await find.update({
         learner: updateLearner + 1,
+      });
+
+      findIns.forEach(async item => {
+        const insUpdate = await Instructor.findByPk(item.id);
+        insUpdate.learner = insUpdate.learner + 1;
+        insUpdate.save();
       });
       return res.json({
         charge,

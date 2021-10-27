@@ -32,6 +32,7 @@ const subTopicRoute = require('./route/subTopicRoute');
 const Omise = require('omise');
 const topicRoute = require('./route/topicRoute');
 const commentRoute = require('./route/commentRoute');
+const quizRoute = require('./route/quizRoute');
 // var bodyParser = require("body-parser");
 
 // app.use(bodyParser.json());
@@ -53,6 +54,7 @@ app.use('/topic', topicRoute);
 app.use('/checkout', checkoutRoute);
 app.use('/subtopic', subTopicRoute);
 app.use('/comment', commentRoute);
+app.use('/quiz', quizRoute);
 
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 //path not found handling middleware

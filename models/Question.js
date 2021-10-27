@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      correct: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {
       underscored: true,
