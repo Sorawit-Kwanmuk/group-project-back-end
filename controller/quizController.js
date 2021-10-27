@@ -1,4 +1,10 @@
 const { Topic, Quiz, Course, Question } = require("../models");
+const utils = require("util");
+const fs = require("fs");
+const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+
+const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 
 exports.createQuiz = async (req, res, next) => {
   try {
@@ -9,15 +15,30 @@ exports.createQuiz = async (req, res, next) => {
         topicId,
       });
 
+      //   const questionList = questionArray.map(item => {
+      //     console.log(`item.question ----->`, item.question);
+      //     return { ...item, quizId: result.id };
+      //   });
       const questionList = questionArray.map(item => {
         return { ...item, quizId: result.id };
       });
 
-      const createQuestion = await Question.bulkCreate(questionList);
+      const withImage = questionList.filter(item => {
+        return item.image !== undefined;
+      });
+      console.log(`withImage --->`, withImage);
+      const withoutImage = questionList.filter(item => {
+        return item.image === undefined;
+      });
+      console.log(`withoutImage --->`, withoutImage);
 
-      console.log(`questionArray`, questionArray);
+      if (withoutImage) {
+        const createQuestion = await Question.bulkCreate(withoutImage);
+      }
 
-      console.log(`questionList`, questionList);
+      //   console.log(`questionArray`, questionArray);
+
+      //   console.log(`questionList`, questionList);
       //   const questionItem = questionList.map(item => {
       //     return {question : item.question};
       //   });
