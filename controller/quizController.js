@@ -23,23 +23,23 @@ exports.createQuiz = async (req, res, next) => {
         return { ...item, quizId: result.id };
       });
 
-      const withImage = questionList.filter(item => {
-        return item.image !== undefined;
-      });
-      console.log(`withImage --->`, withImage);
-      const withoutImage = questionList.filter(item => {
-        return item.image === undefined;
-      });
-      console.log(`withoutImage --->`, withoutImage);
+      //   const withImage = questionList.filter(item => {
+      //     return item.image !== undefined;
+      //   });
+      //   console.log(`withImage --->`, withImage);
+      //   const withoutImage = questionList.filter(item => {
+      //     return item.image === undefined;
+      //   });
+      //   console.log(`withoutImage --->`, withoutImage);
 
-      if (withoutImage) {
-        const createQuestion = await Question.bulkCreate(withoutImage);
-      }
+      //   if (withoutImage) {
+      const createQuestion = await Question.bulkCreate(questionList);
+      //   }
 
-      if (withImage) {
-        const result = await uploadPromise(req.file.path);
-        const courseResult = await Course.bulkCreate({ withImage });
-      }
+      //   if (withImage) {
+      //     const result = await uploadPromise(req.file.path);
+      //     const courseResult = await Course.bulkCreate({ withImage });
+      //   }
 
       //   console.log(`questionArray`, questionArray);
 
