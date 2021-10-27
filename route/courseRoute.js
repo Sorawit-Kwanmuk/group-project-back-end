@@ -19,7 +19,7 @@ const upload = multer({
 
 router.get("/byrating", courseController.getAllCoursebyRating);
 router.get("/bypromotion", courseController.getAllCourseByPro);
-router.get("/:id", authenticate, courseController.getCourseById);
+router.get("/:id", courseController.getCourseById);
 router.post(
   "/",
   authenticate,
