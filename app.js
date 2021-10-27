@@ -2,6 +2,7 @@
 // const { sequelize } = require('./models');
 // sequelize.sync({
 //   alter: true,
+//   // force: true,
 // });
 
 require('dotenv').config();

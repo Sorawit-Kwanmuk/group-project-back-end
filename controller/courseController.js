@@ -44,6 +44,7 @@ exports.getAllCourseByPro = async (req, res, next) => {
     });
     // console.log('courseResult: ', courseResult);
     res.json({ courseResult });
+    console.log('courseResult: ', courseResult);
   } catch (error) {
     next(error);
   }
