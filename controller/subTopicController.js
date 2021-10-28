@@ -48,7 +48,7 @@ exports.getAllSubTopic = async (req, res, next) => {
 exports.getSubTopicById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await SubTopic.findAll({ where: { topicId } });
+    const result = await SubTopic.findAll({ where: { topicId: id } });
     res.json({ result });
   } catch (err) {
     next(err);
