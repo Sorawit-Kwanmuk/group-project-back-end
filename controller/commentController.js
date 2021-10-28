@@ -64,3 +64,67 @@ exports.createComment = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getAllComment = async (req, res, next) => {
+  try {
+    const result = await Comment.findAll();
+    return res.json({ result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getCommentById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Comment.findOne({ where: { id } });
+    res.json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateComment = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { commentName, commentBody } = req.body;
+
+    const find = await Comment.findOne({ where: { id } });
+    console.log(`find`, find);
+
+    if (req.user.id === find.userId) {
+      const [rows] = await Comment.update(
+        {
+          commentName,
+          commentBody,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+
+      return res.json([rows]);
+    }
+    return res.status(401).json({ message: "you are unauthorized" });
+  } catch (error) {
+    next(error.message);
+  }
+};
+
+exports.deleteComment = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Comment.update(
+      {
+        commentName: "Deleted comment",
+        commentBody: "This comment has been deleted by admin ",
+      },
+      { where: { id } }
+    );
+    return res.json({ result });
+  } catch (error) {
+    next(error);
+  }
+};

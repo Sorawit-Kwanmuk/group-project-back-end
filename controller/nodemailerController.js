@@ -27,24 +27,26 @@ exports.sendEmail = async (req, res, next) => {
     const findEmail = await User.findOne({ where: { email: emailInput } });
     console.log(`findEmail`, findEmail);
 
-    const result = await transporter.sendMail(
-      {
-        from: "winthitisan@gmail.com", // sender
-        to: emailInput, // list of receivers
-        subject: "Message From CloneCamp", // Mail subject
-        html: `<b>Greeting ${findEmail.fullName}.</b>
+    if (findEmail) {
+      const result = await transporter.sendMail(
+        {
+          from: "winthitisan@gmail.com", // sender
+          to: emailInput, // list of receivers
+          subject: "Message From CloneCamp", // Mail subject
+          html: `<b>Greeting ${findEmail.fullName}.</b>
         </br>
         <p>This is your password</p>
         </br>
         <b>${findEmail.password}</b>`, // HTML body
-      },
-      function (err, info) {
-        if (err) console.log(err);
-        else console.log(info);
-      }
-    );
-
-    res.json({ result });
+        },
+        function (err, info) {
+          if (err) console.log(err);
+          else console.log(info);
+        }
+      );
+      res.json({ message: "Your password have been sent to your email." });
+    }
+    res.status(400).json({ message: "Incorrected Email" });
   } catch (error) {
     next(error);
   }
