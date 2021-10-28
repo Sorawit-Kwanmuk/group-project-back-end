@@ -1,12 +1,12 @@
-const express = require("express");
-const feedbackController = require("../controller/feedbackController");
-const { authenticate } = require("../controller/authController");
+const express = require('express');
+const feedbackController = require('../controller/feedbackController');
+const { authenticate } = require('../controller/authController');
 
 const router = express.Router();
 
-router.get("/", authenticate, feedbackController.getAllFeedback);
-router.get("/:id", authenticate, feedbackController.getFeedbackById);
-router.post("/", authenticate, feedbackController.createFeedback);
-router.put("/:id", authenticate, feedbackController.updateFeedback);
-router.delete("/:id", authenticate, feedbackController.deleteFeedback);
+router.get('/', authenticate, feedbackController.getAllFeedback);
+router.get('/:id', feedbackController.getFeedbackById); // ลบ authenticate  ออก
+router.post('/', authenticate, feedbackController.createFeedback);
+router.put('/:id', authenticate, feedbackController.updateFeedback);
+router.delete('/:id', authenticate, feedbackController.deleteFeedback);
 module.exports = router;

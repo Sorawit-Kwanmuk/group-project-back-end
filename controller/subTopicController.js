@@ -1,4 +1,4 @@
-const { Topic, SubTopic, Course } = require("../models");
+const { Topic, SubTopic, Course } = require('../models');
 
 exports.createSubTopic = async (req, res, next) => {
   try {
@@ -48,7 +48,7 @@ exports.getAllSubTopic = async (req, res, next) => {
 exports.getSubTopicById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await SubTopic.findOne({ where: { id } });
+    const result = await SubTopic.findAll({ where: { topic_id: id } });
     res.json({ result });
   } catch (err) {
     next(err);
@@ -85,7 +85,7 @@ exports.updateSubTopic = async (req, res, next) => {
 exports.deleteSubTopic = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const findSub = await SubTopic.findOne({ where: { id } });
 
       console.log(`findSub`, findSub);
