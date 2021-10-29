@@ -2,6 +2,17 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const CustomError = require('../utils/error');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const router = require('../route/authRoute');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'winthitisan@gmail.com', // your email
+    pass: 'Winnie2122_', // your email password
+  },
+});
 
 exports.authenticate = async (req, res, next) => {
   try {
@@ -87,10 +98,62 @@ exports.login = async (req, res, next) => {
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
-      expiresIn: "30d",
+      expiresIn: '30d',
     }); // '30d'
     res.json({ message: 'success logged in', token });
   } catch (err) {
     next(err.message);
   }
+};
+
+exports.resetPassword = (req, res, next) => {
+  const { email } = req.body;
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(`err`, err);
+    }
+    const token = buffer.toString('hex');
+    User.findOne({ where: { email: email } }).then(user => {
+      if (!user) {
+        return res.status(422).json({ error: "Email isn't correct" });
+      }
+      user.resetToken = token;
+      user.expireToken = Date.now() + 3600000;
+      user.save().then(result => {
+        transporter.sendMail({
+          to: user.email,
+          from: 'winthitisan@gmail.com',
+          subject: 'CloneCamp : Password Reset',
+          html: `<p>Request for password reset</p>
+          <h5>Click <a href="http://localhost:3000/reset-password/${token}">THIS LINK</a> to reset password</h5>
+          `,
+        });
+        // console.log(`object`, object);
+        res.json({ message: 'please check your email' });
+      });
+    });
+  });
+};
+
+exports.newPassword = (req, res, next) => {
+  const { newPassword, token } = req.body;
+  User.findOne({
+    where: { resetToken: token },
+  }).then(user => {
+    if (!user) {
+      console.log(`user`, user);
+      return res.status(422).json({ error: 'Try Again Session Expire' });
+    }
+    console.log(`user`, user);
+    bcrypt.hash(newPassword, 12).then(hashedPassword => {
+      (user.password = hashedPassword),
+        (user.resetToken = undefined),
+        (user.expireToken = undefined);
+      user.save().then(savedUser =>
+        res.json({
+          savedUser,
+        })
+      );
+    });
+  });
 };

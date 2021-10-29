@@ -74,6 +74,16 @@ exports.getAllComment = async (req, res, next) => {
   }
 };
 
+exports.getAllCommentById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Comment.findAll({ where: { courseId: id } });
+    return res.json({ result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.getCommentById = async (req, res, next) => {
   try {
     const { id } = req.params;
