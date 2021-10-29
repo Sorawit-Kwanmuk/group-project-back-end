@@ -125,7 +125,7 @@ exports.resetPassword = (req, res, next) => {
           from: "winthitisan@gmail.com",
           subject: "CloneCamp : Password Reset",
           html: `<p>Request for password reset</p>
-          <h5>Click <a href="http://localhost:8090/reset/${token}">THIS LINK</a> to reset password</h5>
+          <h5>Click <a href="http://localhost:3000/reset-password/${token}">THIS LINK</a> to reset password</h5>
           `,
         });
         // console.log(`object`, object);
