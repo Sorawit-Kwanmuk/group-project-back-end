@@ -102,19 +102,19 @@ exports.createCourse = async (req, res, next) => {
         discountRate,
         discountUntil,
       });
-      // console.log(`courseResult`, courseResult);
-      let preparedInput = [];
+      console.log(`courseResult`, courseResult);
+      let preparedInput = categoryId.split(",");
 
-      if (typeof categoryId === 'string') {
-        preparedInput.push(+categoryId);
-      } else {
-        categoryId.forEach(item => {
-          preparedInput.push(+item);
-        });
-      }
+      // if (typeof categoryId === "string") {
+      //   preparedInput.push(+categoryId);
+      // } else {
+      //   categoryId.forEach(item => {
+      //     preparedInput.push(+item);
+      //   });
+      // }
       const input = preparedInput.map(item => ({
         courseId: courseResult.id,
-        categoryId: item,
+        categoryId: +item,
       }));
 
       const catmatch = await CourseCat.bulkCreate(input);

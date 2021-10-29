@@ -4,9 +4,9 @@ const { authenticate } = require("../controller/authController");
 
 const router = express.Router();
 
-// router.get("/", topicController.getAllTopic);
-// router.get("/:id", authenticate, topicController.getTopicById);
+router.get("/", commentController.getAllComment);
+router.get("/:id", commentController.getCommentById);
 router.post("/", authenticate, commentController.createComment);
-// router.put("/:id", authenticate, topicController.updateTopic);
-// router.delete("/:id", authenticate, topicController.deleteTopic);
+router.put("/:id", authenticate, commentController.updateComment);
+router.put("/delete/:id", authenticate, commentController.deleteComment);
 module.exports = router;

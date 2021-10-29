@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       categoryName: {
         type: DataTypes.STRING,
-        allowNill: false,
+        allowNull: false,
       },
     },
     {

@@ -17,8 +17,10 @@ const upload = multer({
   }),
 });
 
-router.get('/', instructorController.getAllInstructor);
-router.get('/:id', instructorController.getInstructorById);
+router.get("/", instructorController.getAllInstructor);
+router.get("/rt", instructorController.getInstructorByRating);
+router.get("/:id", instructorController.getInstructorById);
+
 router.post(
   '/',
   authenticate,

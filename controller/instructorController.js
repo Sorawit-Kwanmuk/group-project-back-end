@@ -23,6 +23,19 @@ exports.getAllInstructor = async (req, res, next) => {
   }
 };
 
+exports.getInstructorByRating = async (req, res, next) => {
+  try {
+    const insResultRating = await Instructor.findAll({
+      include: { model: InstructorCat, include: { model: Category } },
+      order: [['rating', 'DESC']],
+    });
+
+    res.json({ insResultRating });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getInstructorById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -72,18 +85,19 @@ exports.createInstructor = async (req, res, next) => {
           profileImage: result.secure_url,
         });
 
-        let preparedInput = [];
+        let preparedInput = categoryId.split(',');
+        // let preparedInput = [];
 
-        if (typeof categoryId === 'string') {
-          preparedInput.push(+categoryId);
-        } else {
-          categoryId.forEach(item => {
-            preparedInput.push(+item);
-          });
-        }
+        // if (typeof categoryId === "string") {
+        //   preparedInput.push(+categoryId);
+        // } else {
+        //   categoryId.forEach(item => {
+        //     preparedInput.push(+item);
+        //   });
+        // }
         const input = preparedInput.map(item => ({
           instructorId: insResult.id,
-          categoryId: item,
+          categoryId: +item,
         }));
         // console.log(`input`, input);
 
