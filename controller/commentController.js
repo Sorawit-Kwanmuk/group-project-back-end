@@ -1,6 +1,6 @@
-const { Comment } = require("../models");
-const { Course, Topic, Instructor } = require("../models");
-const { Op } = require("sequelize");
+const { Comment } = require('../models');
+const { Course, Topic, Instructor } = require('../models');
+const { Op } = require('sequelize');
 
 exports.createComment = async (req, res, next) => {
   try {
@@ -83,6 +83,15 @@ exports.getCommentById = async (req, res, next) => {
     next(err);
   }
 };
+exports.getAllCommentById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Comment.findAll({ where: { courseId: id } });
+    res.json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.updateComment = async (req, res, next) => {
   try {
@@ -107,7 +116,7 @@ exports.updateComment = async (req, res, next) => {
 
       return res.json([rows]);
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
@@ -118,8 +127,8 @@ exports.deleteComment = async (req, res, next) => {
     const { id } = req.params;
     const result = await Comment.update(
       {
-        commentName: "Deleted comment",
-        commentBody: "This comment has been deleted by admin ",
+        commentName: 'Deleted comment',
+        commentBody: 'This comment has been deleted by admin ',
       },
       { where: { id } }
     );
