@@ -36,6 +36,7 @@ const myCourseRoute = require("./route/myCourseRoute");
 const questionRoute = require("./route/questionRoute");
 const nodemailerRoute = require("./route/nodemailerRoute");
 const userRoute = require("./route/userRoute");
+const contactUsRoute = require("./route/contactUsRoute");
 // var bodyParser = require("body-parser");
 
 // app.use(bodyParser.json());
@@ -62,7 +63,7 @@ app.use("/mycourse", myCourseRoute);
 app.use("/question", questionRoute);
 app.use("/mail", nodemailerRoute);
 app.use("/user", userRoute);
-
+app.use("/contactus", contactUsRoute);
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 //path not found handling middleware
 app.use((req, res, next) => {
