@@ -66,10 +66,16 @@ module.exports = (sequelize, DataTypes) => {
       discountRate: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        defaultValue: 0,
       },
       discountUntil: {
         type: DataTypes.DATEONLY,
         allowNull: true,
+        defaultValue: null,
+      },
+      status: {
+        type: DataTypes.ENUM(["ready", "notReady"]),
+        defaultValue: "notReady",
       },
     },
 

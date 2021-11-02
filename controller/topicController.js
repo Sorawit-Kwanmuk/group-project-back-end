@@ -54,12 +54,25 @@ exports.getTopicByInsId = async (req, res, next) => {
   }
 };
 
+exports.getTopicByCourseId = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Topic.findAll({
+      where: { courseId: id },
+      include: [{ model: Course }, { model: Instructor }],
+    });
+    res.json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.updateTopic = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { topicName, courseId, instructorId } = req.body;
     if (req.user.role === "admin") {
-      const [rows] = await Topic.update(
+      const rows = await Topic.update(
         {
           topicName,
           courseId,
@@ -72,7 +85,7 @@ exports.updateTopic = async (req, res, next) => {
         }
       );
 
-      return res.json([rows]);
+      return res.json({ topicName, courseId, instructorId });
     }
     return res.status(401).json({ message: "you are unauthorized" });
   } catch (error) {

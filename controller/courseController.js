@@ -19,6 +19,29 @@ const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 //     }
 // }
 
+exports.getAllCoursebyDate = async (req, res, next) => {
+  try {
+    // const findTopic = await Topic.findAll({ where: { courseId: id } });
+    // const mapTopic = findTopic.map(item => item.instructorId);
+    // const findIns = await Instructor.findAll({
+    //   where: { id: { [Op.or]: mapTopic } },
+    // });
+    const courseResult = await Course.findAll({
+      include: [
+        { model: CourseCat, include: { model: Category } },
+        { model: Promotion },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+    res.json({
+      courseResult,
+      // findIns
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.getAllCoursebyRating = async (req, res, next) => {
   try {
     // const findTopic = await Topic.findAll({ where: { courseId: id } });
@@ -88,36 +111,70 @@ exports.createCourse = async (req, res, next) => {
     console.log(req.body);
     if (req.user.role === "admin") {
       const result = await uploadPromise(req.file.path);
-      const courseResult = await Course.create({
-        courseName,
-        price,
-        duration,
-        shortDescription,
-        about,
-        level,
-        clip,
-        courseImage: result.secure_url,
-        discountRate,
-        discountUntil,
-      });
-      console.log(`courseResult`, courseResult);
-      let preparedInput = categoryId.split(",");
 
-      // if (typeof categoryId === "string") {
-      //   preparedInput.push(+categoryId);
-      // } else {
-      //   categoryId.forEach(item => {
-      //     preparedInput.push(+item);
-      //   });
-      // }
-      const input = preparedInput.map(item => ({
-        courseId: courseResult.id,
-        categoryId: +item,
-      }));
+      if (discountUntil === "") {
+        const courseResult = await Course.create({
+          courseName,
+          price,
+          duration,
+          shortDescription,
+          about,
+          level,
+          clip,
+          courseImage: result.secure_url,
+          discountRate,
+          discountUntil: null,
+        });
+        console.log(`courseResult`, courseResult);
+        let preparedInput = categoryId.split(",");
 
-      const catmatch = await CourseCat.bulkCreate(input);
+        // if (typeof categoryId === "string") {
+        //   preparedInput.push(+categoryId);
+        // } else {
+        //   categoryId.forEach(item => {
+        //     preparedInput.push(+item);
+        //   });
+        // }
+        const input = preparedInput.map(item => ({
+          courseId: courseResult.id,
+          categoryId: +item,
+        }));
 
-      res.json({ courseResult, catmatch });
+        const catmatch = await CourseCat.bulkCreate(input);
+
+        return res.json({ courseResult, catmatch });
+      } else {
+        const courseResult = await Course.create({
+          courseName,
+          price,
+          duration,
+          shortDescription,
+          about,
+          level,
+          clip,
+          courseImage: result.secure_url,
+          discountRate,
+          discountUntil,
+        });
+        console.log(`courseResult`, courseResult);
+        let preparedInput = categoryId.split(",");
+
+        // if (typeof categoryId === "string") {
+        //   preparedInput.push(+categoryId);
+        // } else {
+        //   categoryId.forEach(item => {
+        //     preparedInput.push(+item);
+        //   });
+        // }
+        const input = preparedInput.map(item => ({
+          courseId: courseResult.id,
+          categoryId: +item,
+        }));
+
+        const catmatch = await CourseCat.bulkCreate(input);
+
+        return res.json({ courseResult, catmatch });
+      }
     }
     return res.status(401).json({ message: "you are unauthorized" });
   } catch (error) {
@@ -126,6 +183,7 @@ exports.createCourse = async (req, res, next) => {
 };
 
 exports.updateCourse = async (req, res, next) => {
+  console.log(`req.body`, req.body);
   try {
     const { id } = req.params;
     const {
@@ -142,28 +200,52 @@ exports.updateCourse = async (req, res, next) => {
     } = req.body;
     if (req.user.role === "admin") {
       const result = await uploadPromise(req.file.path);
-      const [rows] = await Course.update(
-        {
-          // 10
-          courseName,
-          price,
-          duration,
-          shortDescription,
-          about,
-          level,
-          clip,
-          courseImage: result.secure_url,
-          discountRate,
-          discountUntil,
-        },
-        {
-          where: {
-            id,
-          },
-        }
-      );
 
-      return res.json([rows]);
+      if (discountUntil === "null") {
+        const [rows] = await Course.update(
+          {
+            // 10
+            courseName,
+            price,
+            duration,
+            shortDescription,
+            about,
+            level,
+            clip,
+            courseImage: result.secure_url,
+            discountRate,
+            discountUntil: null,
+          },
+          {
+            where: {
+              id,
+            },
+          }
+        );
+        return res.json([rows]);
+      } else {
+        const [rows] = await Course.update(
+          {
+            // 10
+            courseName,
+            price,
+            duration,
+            shortDescription,
+            about,
+            level,
+            clip,
+            courseImage: result.secure_url,
+            discountRate,
+            discountUntil,
+          },
+          {
+            where: {
+              id,
+            },
+          }
+        );
+        return res.json([rows]);
+      }
     }
     return res.status(401).json({ message: "you are unauthorized" });
   } catch (err) {

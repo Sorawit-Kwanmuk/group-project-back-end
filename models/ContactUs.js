@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     "ContactUs",
     {
       map: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       address: {
