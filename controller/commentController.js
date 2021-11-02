@@ -1,6 +1,6 @@
-const { Comment } = require("../models");
-const { Course, Topic, Instructor } = require("../models");
-const { Op } = require("sequelize");
+const { Comment } = require('../models');
+const { Course, Topic, Instructor } = require('../models');
+const { Op } = require('sequelize');
 
 exports.createComment = async (req, res, next) => {
   try {
@@ -28,18 +28,18 @@ exports.createComment = async (req, res, next) => {
       courseId,
     });
     // console.log(`result`, result);
-    console.log(`rating ---->`, courseRating);
-    console.log(`result.rating ---->`, result.rating);
-    console.log(`courseRatingAmount ---->`, courseRatingAmount);
+    // console.log(`rating ---->`, courseRating);
+    // console.log(`result.rating ---->`, result.rating);
+    // console.log(`courseRatingAmount ---->`, courseRatingAmount);
     const totalRating =
       (+courseRatingTotal + +result.rating) / (courseRatingAmount + 1);
-    console.log(`typeof totalRating`, typeof totalRating);
+    // console.log(`typeof totalRating`, typeof totalRating);
     const updateCourse = await find.update({
       ratingAmount: courseRatingAmount + 1,
       rating: totalRating.toFixed(2),
       ratingTotal: courseRatingTotal + result.rating,
     });
-    console.log(`updateCourse`, updateCourse);
+    // console.log(`updateCourse`, updateCourse);
 
     findIns.forEach(async item => {
       const insUpdate = await Instructor.findByPk(item.id);
@@ -93,6 +93,15 @@ exports.getCommentById = async (req, res, next) => {
     next(err);
   }
 };
+exports.getAllCommentById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Comment.findAll({ where: { courseId: id } });
+    res.json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.updateComment = async (req, res, next) => {
   try {
@@ -117,7 +126,7 @@ exports.updateComment = async (req, res, next) => {
 
       return res.json([rows]);
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
@@ -128,8 +137,8 @@ exports.deleteComment = async (req, res, next) => {
     const { id } = req.params;
     const result = await Comment.update(
       {
-        commentName: "Deleted comment",
-        commentBody: "This comment has been deleted by admin ",
+        commentName: 'Deleted comment',
+        commentBody: 'This comment has been deleted by admin ',
       },
       { where: { id } }
     );

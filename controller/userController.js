@@ -1,8 +1,8 @@
-const { User } = require("../models");
-const utils = require("util");
-const fs = require("fs");
-const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
+const { User } = require('../models');
+const utils = require('util');
+const fs = require('fs');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
 
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 
@@ -39,9 +39,9 @@ exports.updateUserDetail = async (req, res, next) => {
     const rows = await user.save();
 
     if (rows === 0) {
-      return res.status(400).json({ message: "fail to update user" });
+      return res.status(400).json({ message: 'fail to update user' });
     }
-    return res.json({ rows });
+    return res.status(200).json({ rows });
   } catch (error) {
     next(error.message);
   }
@@ -60,7 +60,7 @@ exports.updateUserImage = async (req, res, next) => {
     const rows = await user.save();
 
     if (rows === 0) {
-      return res.status(400).json({ message: "fail to update user" });
+      return res.status(400).json({ message: 'fail to update user' });
     }
     return res.json({ rows });
 

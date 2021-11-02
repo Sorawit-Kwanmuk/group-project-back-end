@@ -1,8 +1,8 @@
 // สร้าง table จาก models
-const { sequelize } = require("./models");
-sequelize.sync({
-  alter: true,
-});
+// const { sequelize } = require("./models");
+// sequelize.sync({
+//   alter: true,
+// });
 
 require("dotenv").config();
 const multer = require("multer");

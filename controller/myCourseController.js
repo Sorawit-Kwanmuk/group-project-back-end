@@ -1,4 +1,4 @@
-const { MyCourse, Course } = require("../models");
+const { MyCourse, Course } = require('../models');
 
 exports.getAllMyCourse = async (req, res, next) => {
   const result = await MyCourse.findAll({ include: { model: Course } });
@@ -52,7 +52,7 @@ exports.updatePersonalMyCourse = async (req, res, next) => {
     });
     if (result.currentStage === result.totalStage) {
       const updateStatus = result.update({
-        status: "completed",
+        status: 'completed',
       });
     }
     res.json({ result });

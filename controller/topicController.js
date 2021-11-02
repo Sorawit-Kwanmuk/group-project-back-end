@@ -72,7 +72,7 @@ exports.updateTopic = async (req, res, next) => {
     const { id } = req.params;
     const { topicName, courseId, instructorId } = req.body;
     if (req.user.role === "admin") {
-      const rows = await Topic.update(
+      const [rows] = await Topic.update(
         {
           topicName,
           courseId,
@@ -102,7 +102,7 @@ exports.deleteTopic = async (req, res, next) => {
           id,
         },
       });
-      console.log(rows);
+      // console.log(rows);
       if (rows === 0) {
         return res.status(400).json({ message: "fail to delete Topic" });
       }

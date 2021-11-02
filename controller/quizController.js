@@ -74,7 +74,7 @@ exports.createQuiz = async (req, res, next) => {
       //   console.log(`increaseScoreQuiz`, increaseScoreQuiz);
       return res.json({ result, increase });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error);
   }
@@ -83,7 +83,7 @@ exports.createQuiz = async (req, res, next) => {
 exports.getAllQuiz = async (req, res, next) => {
   try {
     const result = await Quiz.findAll({
-      include: { model: Topic, attributes: ["topicName"] },
+      include: { model: Topic, attributes: ['topicName'] },
     });
     return res.json({ result });
   } catch (error) {
@@ -125,7 +125,7 @@ exports.updateQuiz = async (req, res, next) => {
 
       return res.json([rows]);
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
@@ -160,14 +160,14 @@ exports.deleteQuiz = async (req, res, next) => {
           id,
         },
       });
-      console.log(rows);
+      // console.log(rows);
       if (rows === 0) {
         return res.status(400).json({ message: "fail to delete Quiz" });
       }
 
-      return res.status(204).json({ message: "Delete Successfully" });
+      return res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }

@@ -1,6 +1,6 @@
-const { Course } = require("../models");
-const { CourseCat } = require("../models");
-const { Category } = require("../models");
+const { Course } = require('../models');
+const { CourseCat } = require('../models');
+const { Category } = require('../models');
 
 exports.getAllCourseCat = async (req, res, next) => {
   try {
@@ -37,8 +37,8 @@ exports.getCourseCatByCat = async (req, res, next) => {
 exports.addCourseCat = async (req, res, next) => {
   try {
     const { courseId, categoryId } = req.body;
-    console.log(`req.body`, req.body);
-    if (req.user.role === "admin") {
+    // console.log(`req.body`, req.body);
+    if (req.user.role === 'admin') {
       const result = await CourseCat.create({
         courseId,
         categoryId,
@@ -53,22 +53,22 @@ exports.addCourseCat = async (req, res, next) => {
 exports.deleteCourseCat = async (req, res, next) => {
   try {
     const { courseId, categoryId } = req.body;
-    console.log(`req.body`, req.body);
-    if (req.user.role === "admin") {
+    // console.log(`req.body`, req.body);
+    if (req.user.role === 'admin') {
       const rows = await CourseCat.destroy({
         where: {
           courseId,
           categoryId,
         },
       });
-      console.log(rows);
+      // console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete waste" });
+        return res.status(400).json({ message: 'fail to delete waste' });
       }
 
-      res.status(204).json({ message: "Delete Successfully" });
+      res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {
     next(err);
   }

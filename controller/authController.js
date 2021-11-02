@@ -1,30 +1,30 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { User } = require("../models");
-const CustomError = require("../utils/error");
-const crypto = require("crypto");
-const nodemailer = require("nodemailer");
-const router = require("../route/authRoute");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { User } = require('../models');
+const CustomError = require('../utils/error');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const router = require('../route/authRoute');
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: 'gmail',
   auth: {
-    user: "winthitisan@gmail.com", // your email
-    pass: "Winnie2122_", // your email password
+    user: 'winthitisan@gmail.com', // your email
+    pass: 'Winnie2122_', // your email password
   },
 });
 
 exports.authenticate = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
-    if (!authorization || !authorization.startsWith("Bearer")) {
-      return res.status(401).json({ message: "you are unauthorized" });
+    if (!authorization || !authorization.startsWith('Bearer')) {
+      return res.status(401).json({ message: 'you are unauthorized' });
     }
 
-    const token = authorization.split(" ")[1];
+    const token = authorization.split(' ')[1];
 
     if (!token) {
-      return res.status(401).json({ message: "you are unauthorized" });
+      return res.status(401).json({ message: 'you are unauthorized' });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -33,7 +33,7 @@ exports.authenticate = async (req, res, next) => {
     const user = await User.findOne({ where: { id: decoded.id } });
     // console.log(user);
     if (!user) {
-      return res.status(401).json({ message: "you are unauthorized" });
+      return res.status(401).json({ message: 'you are unauthorized' });
     }
 
     req.user = user;
@@ -57,7 +57,7 @@ exports.register = async (req, res, next) => {
     } = req.body;
 
     if (password !== confirmPassword) {
-      throw new CustomError("password and confirm password did not match", 400);
+      throw new CustomError('password and confirm password did not match', 400);
     }
     const hashedPassword = await bcrypt.hash(password, 12);
     await User.create({
@@ -68,7 +68,7 @@ exports.register = async (req, res, next) => {
       username,
       password: hashedPassword,
     });
-    res.status(200).json({ message: "your account has been created" });
+    res.status(200).json({ message: 'your account has been created' });
   } catch (error) {
     next(error);
   }
@@ -77,18 +77,18 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    console.log(`username`, username);
-    console.log(`password`, password);
+    // console.log(`username`, username);
+    // console.log(`password`, password);
     const user = await User.findOne({ where: { username: username } });
-
+    // console.log(`user`, user);
     if (!user) {
-      return res.status(400).json({ message: "invalid username or password" });
+      return res.status(400).json({ message: 'invalid username or password' });
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
-      return res.status(400).json({ message: "invalid username or password" });
+      return res.status(400).json({ message: 'invalid username or password' });
     }
 
     const payload = {
@@ -98,9 +98,9 @@ exports.login = async (req, res, next) => {
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
-      expiresIn: "30d",
+      expiresIn: '30d',
     }); // '30d'
-    res.json({ message: "success logged in", token });
+    res.json({ message: 'success logged in', token });
   } catch (err) {
     next(err.message);
   }
@@ -112,7 +112,7 @@ exports.resetPassword = (req, res, next) => {
     if (err) {
       console.log(`err`, err);
     }
-    const token = buffer.toString("hex");
+    const token = buffer.toString('hex');
     User.findOne({ where: { email: email } }).then(user => {
       if (!user) {
         return res.status(422).json({ error: "Email isn't correct" });
@@ -122,14 +122,14 @@ exports.resetPassword = (req, res, next) => {
       user.save().then(result => {
         transporter.sendMail({
           to: user.email,
-          from: "winthitisan@gmail.com",
-          subject: "CloneCamp : Password Reset",
+          from: 'winthitisan@gmail.com',
+          subject: 'CloneCamp : Password Reset',
           html: `<p>Request for password reset</p>
           <h5>Click <a href="http://localhost:3000/reset-password/${token}">THIS LINK</a> to reset password</h5>
           `,
         });
         // console.log(`object`, object);
-        res.json({ message: "please check your email" });
+        res.json({ message: 'please check your email' });
       });
     });
   });
@@ -142,7 +142,7 @@ exports.newPassword = (req, res, next) => {
   }).then(user => {
     if (!user) {
       console.log(`user`, user);
-      return res.status(422).json({ error: "Try Again Session Expire" });
+      return res.status(422).json({ error: 'Try Again Session Expire' });
     }
     console.log(`user`, user);
     bcrypt.hash(newPassword, 12).then(hashedPassword => {

@@ -54,7 +54,7 @@ exports.getAllCoursebyRating = async (req, res, next) => {
         { model: CourseCat, include: { model: Category } },
         { model: Promotion },
       ],
-      order: [["rating", "DESC"]],
+      order: [['rating', 'DESC']],
     });
     res.json({
       courseResult,
@@ -72,9 +72,11 @@ exports.getAllCourseByPro = async (req, res, next) => {
         { model: CourseCat, include: { model: Category } },
         { model: Promotion },
       ],
-      order: [["discountRate", "DESC"]],
+      order: [['discountRate', 'DESC']],
     });
+    // console.log('courseResult: ', courseResult);
     res.json({ courseResult });
+    console.log('courseResult: ', courseResult);
   } catch (error) {
     next(error);
   }
@@ -108,8 +110,8 @@ exports.createCourse = async (req, res, next) => {
       discountRate,
       discountUntil,
     } = req.body;
-    console.log(req.body);
-    if (req.user.role === "admin") {
+    // console.log(req.body);
+    if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
 
       if (discountUntil === "") {
@@ -176,7 +178,7 @@ exports.createCourse = async (req, res, next) => {
         return res.json({ courseResult, catmatch });
       }
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
@@ -198,7 +200,7 @@ exports.updateCourse = async (req, res, next) => {
       discountRate,
       discountUntil,
     } = req.body;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
 
       if (discountUntil === "null") {
@@ -247,7 +249,7 @@ exports.updateCourse = async (req, res, next) => {
         return res.json([rows]);
       }
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {
     next(err.message);
   }
@@ -256,20 +258,20 @@ exports.updateCourse = async (req, res, next) => {
 exports.deleteCourse = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const rows = await Course.destroy({
         where: {
           id,
         },
       });
-      console.log(rows);
+      // console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete Course" });
+        return res.status(400).json({ message: 'fail to delete Course' });
       }
 
-      return res.status(204).json({ message: "Delete Successfully" });
+      return res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }

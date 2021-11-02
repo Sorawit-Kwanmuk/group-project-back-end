@@ -1,9 +1,9 @@
-const omise = require("omise")({
+const omise = require('omise')({
   publicKey: process.env.OMISE_PUBLIC_KEY,
   secretKey: process.env.OMISE_SECRET_KEY,
 });
-const { Course, MyCourse, Instructor, Topic } = require("../models");
-const { Op } = require("sequelize");
+const { Course, MyCourse, Instructor, Topic } = require('../models');
+const { Op } = require('sequelize');
 
 exports.createCheckout = async (req, res, next) => {
   const { token, courseId } = req.body;
@@ -20,7 +20,7 @@ exports.createCheckout = async (req, res, next) => {
   const mapTopic = findTopic.map(item => item.instructorId);
 
   // mapTopic(id=> {
-  console.log(`<--- mapTopic --->`, mapTopic);
+  // console.log(`<--- mapTopic --->`, mapTopic);
   // })
 
   const findIns = await Instructor.findAll({
@@ -34,13 +34,13 @@ exports.createCheckout = async (req, res, next) => {
   try {
     const charge = await omise.charges.create({
       amount: price * 100,
-      currency: "thb",
+      currency: 'thb',
       card: token,
       metadata: { courseId: courseId, user: req.user.id },
     });
     // console.log(`charge -------> `, charge);
 
-    if (charge.status === "successful") {
+    if (charge.status === 'successful') {
       const myCourse = await MyCourse.create({
         userId: req.user.id,
         courseId,

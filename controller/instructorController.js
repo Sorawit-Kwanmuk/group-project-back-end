@@ -1,11 +1,11 @@
-const { Instructor } = require("../models");
-const { InstructorCat } = require("../models");
-const { Category } = require("../models");
-const utils = require("util");
-const fs = require("fs");
-const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
-const express = require("express");
+const { Instructor } = require('../models');
+const { InstructorCat } = require('../models');
+const { Category } = require('../models');
+const utils = require('util');
+const fs = require('fs');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const express = require('express');
 
 const app = express();
 
@@ -27,7 +27,7 @@ exports.getInstructorByRating = async (req, res, next) => {
   try {
     const insResultRating = await Instructor.findAll({
       include: { model: InstructorCat, include: { model: Category } },
-      order: [["rating", "DESC"]],
+      order: [['rating', 'DESC']],
     });
 
     res.json({ insResultRating });
@@ -65,9 +65,9 @@ exports.createInstructor = async (req, res, next) => {
       profileImage,
       categoryId,
     } = req.body;
-    console.log(`fullName`, fullName);
-    console.log(`req.user.role`, req.user.role);
-    if (req.user.role === "admin") {
+    // console.log(`fullName`, fullName);
+    // console.log(`req.user.role`, req.user.role);
+    if (req.user.role === 'admin') {
       if (req.file) {
         const result = await uploadPromise(req.file.path);
         const insResult = await Instructor.create({
@@ -85,7 +85,7 @@ exports.createInstructor = async (req, res, next) => {
           profileImage: result.secure_url,
         });
 
-        let preparedInput = categoryId.split(",");
+        let preparedInput = categoryId.split(',');
         // let preparedInput = [];
 
         // if (typeof categoryId === "string") {
@@ -99,7 +99,7 @@ exports.createInstructor = async (req, res, next) => {
           instructorId: insResult.id,
           categoryId: +item,
         }));
-        console.log(`input`, input);
+        // console.log(`input`, input);
 
         const catmatch = await InstructorCat.bulkCreate(input);
 
@@ -122,7 +122,7 @@ exports.createInstructor = async (req, res, next) => {
 
         let preparedInput = [];
 
-        if (typeof categoryId === "string") {
+        if (typeof categoryId === 'string') {
           preparedInput.push(+categoryId);
         } else {
           categoryId.forEach(item => {
@@ -133,7 +133,7 @@ exports.createInstructor = async (req, res, next) => {
           instructorId: insResult.id,
           categoryId: item,
         }));
-        console.log(`input`, input);
+        // console.log(`input`, input);
 
         const catmatch = await InstructorCat.bulkCreate(input);
 
@@ -141,7 +141,7 @@ exports.createInstructor = async (req, res, next) => {
       }
     }
 
-    res.status(401).json({ message: "you are unauthorized" });
+    res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error);
   }
@@ -163,7 +163,7 @@ exports.updateInstructor = async (req, res, next) => {
       twitter,
       profileImage,
     } = req.body;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       if (req.file) {
         const result = await uploadPromise(req.file.path);
         const [rows] = await Instructor.update(
@@ -213,7 +213,7 @@ exports.updateInstructor = async (req, res, next) => {
         return res.json([rows]);
       }
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
@@ -223,20 +223,20 @@ exports.deleteInstructor = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const rows = await Instructor.destroy({
         where: {
           id,
         },
       });
-      console.log(rows);
+      // console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete instructor" });
+        return res.status(400).json({ message: 'fail to delete instructor' });
       }
 
-      res.status(204).json({ message: "Delete Successfully" });
+      res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {
     next(err);
   }
