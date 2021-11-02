@@ -2,6 +2,14 @@ module.exports = (sequelize, DataTypes) => {
   const Feedback = sequelize.define(
     "Feedback",
     {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       feedbackName: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -17,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      underscroed: true,
+      underscored: true,
       paranoid: true,
     }
   );
