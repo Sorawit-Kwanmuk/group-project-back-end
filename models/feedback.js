@@ -29,16 +29,16 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true,
     }
   );
-  Feedback.associate = models => {
-    Feedback.belongsTo(models.User, {
-      foreignKey: {
-        name: "userId",
-        allowNull: false,
-      },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
-    });
-  };
+  // Feedback.associate = models => {
+  //   Feedback.belongsTo(models.User, {
+  //     foreignKey: {
+  //       name: "userId",
+  //       allowNull: false,
+  //     },
+  //     onDelete: "RESTRICT",
+  //     onUpdate: "RESTRICT",
+  //   });
+  // };
 
   return Feedback;
 };

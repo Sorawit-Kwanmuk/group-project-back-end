@@ -1,4 +1,4 @@
-const { Topic, Instructor, Course } = require("../models");
+const { Topic, Instructor, Course, SubTopic } = require("../models");
 
 exports.createTopic = async (req, res, next) => {
   try {
@@ -20,7 +20,7 @@ exports.createTopic = async (req, res, next) => {
 exports.getAllTopic = async (req, res, next) => {
   try {
     const result = await Topic.findAll({
-      include: [{ model: Course }, { model: Instructor }],
+      include: [{ model: Course }, { model: Instructor }, { model: subTopic }],
     });
     return res.json({ result });
   } catch (error) {
@@ -59,7 +59,7 @@ exports.getTopicByCourseId = async (req, res, next) => {
     const { id } = req.params;
     const result = await Topic.findAll({
       where: { courseId: id },
-      include: [{ model: Course }, { model: Instructor }],
+      include: [{ model: Course }, { model: Instructor }, { model: SubTopic }],
     });
     res.json({ result });
   } catch (err) {

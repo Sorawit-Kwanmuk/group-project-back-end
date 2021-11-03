@@ -95,14 +95,14 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: "RESTRICT",
     });
 
-    User.hasMany(models.Feedback, {
-      foreignKey: {
-        name: "userId",
-        allowNull: true,
-      },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
-    });
+    // User.hasMany(models.Feedback, {
+    //   foreignKey: {
+    //     name: "userId",
+    //     allowNull: true,
+    //   },
+    //   onDelete: "RESTRICT",
+    //   onUpdate: "RESTRICT",
+    // });
   };
 
   return User;
