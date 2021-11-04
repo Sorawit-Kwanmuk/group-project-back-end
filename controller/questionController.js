@@ -50,6 +50,16 @@ exports.getQuestionById = async (req, res, next) => {
   }
 };
 
+exports.getQuestionByQuizId = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Question.findOne({ where: { quizId: id } });
+    return res.json({ result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.updateQuestion = async (req, res, next) => {
   try {
     const { id } = req.params;

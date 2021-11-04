@@ -23,7 +23,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       level: {
-        type: DataTypes.ENUM(["Beginner", "Intermediate", "Expert"]),
+        type: DataTypes.ENUM([
+          "1 - Beginner",
+          "2 - Intermediate",
+          "3 - Expert",
+        ]),
         defaultValue: "Beginner",
       },
       clip: {
