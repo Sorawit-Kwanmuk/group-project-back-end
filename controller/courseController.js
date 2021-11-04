@@ -1,13 +1,13 @@
-const { Course } = require("../models");
-const { CourseCat } = require("../models");
-const { Category } = require("../models");
-const { Promotion, Instructor, Topic } = require("../models");
-const utils = require("util");
-const fs = require("fs");
-const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
-const express = require("express");
-const { Op } = require("sequelize");
+const { Course } = require('../models');
+const { CourseCat } = require('../models');
+const { Category } = require('../models');
+const { Promotion, Instructor, Topic } = require('../models');
+const utils = require('util');
+const fs = require('fs');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const express = require('express');
+const { Op } = require('sequelize');
 
 const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 
@@ -31,9 +31,9 @@ exports.getAllCoursebyDate = async (req, res, next) => {
         { model: CourseCat, include: { model: Category } },
         { model: Promotion },
       ],
-      order: [["createdAt", "DESC"]],
+      order: [['createdAt', 'DESC']],
     });
-    res.json({
+    res.status(200).json({
       courseResult,
       // findIns
     });
@@ -54,9 +54,9 @@ exports.getAllCoursebyRating = async (req, res, next) => {
         { model: CourseCat, include: { model: Category } },
         { model: Promotion },
       ],
-      order: [["rating", "DESC"]],
+      order: [['rating', 'DESC']],
     });
-    res.json({
+    res.status(200).json({
       courseResult,
       // findIns
     });
@@ -72,11 +72,11 @@ exports.getAllCourseByPro = async (req, res, next) => {
         { model: CourseCat, include: { model: Category } },
         { model: Promotion },
       ],
-      order: [["discountRate", "DESC"]],
+      order: [['discountRate', 'DESC']],
     });
     // console.log('courseResult: ', courseResult);
-    res.json({ courseResult });
-    console.log("courseResult: ", courseResult);
+    res.status(200).json({ courseResult });
+    console.log('courseResult: ', courseResult);
   } catch (error) {
     next(error);
   }
@@ -89,7 +89,7 @@ exports.getCourseById = async (req, res, next) => {
       where: { id },
       include: { model: Topic, include: { model: Instructor } },
     });
-    res.json({ courseResult });
+    res.status(200).json({ courseResult });
   } catch (error) {
     next(error.message);
   }
@@ -111,10 +111,10 @@ exports.createCourse = async (req, res, next) => {
       discountUntil,
     } = req.body;
     // console.log(req.body);
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
 
-      if (discountUntil === "") {
+      if (discountUntil === '') {
         const courseResult = await Course.create({
           courseName,
           price,
@@ -128,7 +128,7 @@ exports.createCourse = async (req, res, next) => {
           discountUntil: null,
         });
         console.log(`courseResult`, courseResult);
-        let preparedInput = categoryId.split(",");
+        let preparedInput = categoryId.split(',');
 
         // if (typeof categoryId === "string") {
         //   preparedInput.push(+categoryId);
@@ -159,7 +159,7 @@ exports.createCourse = async (req, res, next) => {
           discountUntil,
         });
         console.log(`courseResult`, courseResult);
-        let preparedInput = categoryId.split(",");
+        let preparedInput = categoryId.split(',');
 
         // if (typeof categoryId === "string") {
         //   preparedInput.push(+categoryId);
@@ -178,7 +178,7 @@ exports.createCourse = async (req, res, next) => {
         return res.json({ courseResult, catmatch });
       }
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
@@ -200,10 +200,10 @@ exports.updateCourse = async (req, res, next) => {
       discountRate,
       discountUntil,
     } = req.body;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
 
-      if (discountUntil === "null") {
+      if (discountUntil === 'null') {
         const [rows] = await Course.update(
           {
             // 10
@@ -278,10 +278,10 @@ exports.updateCourse = async (req, res, next) => {
         // }));
 
         // const catmatch = await CourseCat.bulkCreate(input);
-        return res.json([rows]);
+        return res.status(200).json([rows]);
       }
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {
     next(err.message);
   }
@@ -290,7 +290,7 @@ exports.updateCourse = async (req, res, next) => {
 exports.deleteCourse = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const rows = await Course.destroy({
         where: {
           id,
@@ -298,12 +298,12 @@ exports.deleteCourse = async (req, res, next) => {
       });
       // console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete Course" });
+        return res.status(400).json({ message: 'fail to delete Course' });
       }
 
-      return res.status(204).json({ message: "Delete Successfully" });
+      return res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }

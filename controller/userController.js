@@ -27,7 +27,7 @@ exports.getUserByUserId = async (req, res, next) => {
 exports.updateUserDetail = async (req, res, next) => {
   try {
     const { fullName, birthDate, email, mobileNo } = req.body;
-    console.log(`req.body`, req.body);
+    // console.log(`req.body`, req.body);
     const user = await User.findOne({ where: { id: req.user.id } });
 
     user.fullName = fullName;
@@ -48,11 +48,12 @@ exports.updateUserDetail = async (req, res, next) => {
 };
 
 exports.updateUserImage = async (req, res, next) => {
+  console.log(req.file);
   try {
     const { profileImage } = req.body;
     const user = await User.findOne({ where: { id: req.user.id } });
 
-    const result = await uploadPromise(req.file.path);
+    const result = await uploadPromise(req.file.path, { timeout: 60000 });
 
     user.profileImage = result.secure_url;
 
@@ -62,7 +63,7 @@ exports.updateUserImage = async (req, res, next) => {
     if (rows === 0) {
       return res.status(400).json({ message: 'fail to update user' });
     }
-    return res.json({ rows });
+    return res.status(200).json({ rows });
 
     //   const user = await User.findOne({ where: { id: req.user.id } });
   } catch (error) {
