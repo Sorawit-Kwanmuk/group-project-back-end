@@ -16,11 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       choiceC: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       choiceD: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       image: {
         type: DataTypes.STRING,

@@ -188,6 +188,7 @@ exports.updateCourse = async (req, res, next) => {
   console.log(`req.body`, req.body);
   try {
     const { id } = req.params;
+    console.log(`req.params`, req.params);
     const {
       courseName,
       price,
@@ -199,7 +200,10 @@ exports.updateCourse = async (req, res, next) => {
       courseImage,
       discountRate,
       discountUntil,
+      categoryId,
     } = req.body;
+    console.log(`req.body`, req.body);
+
     if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
 
@@ -225,21 +229,21 @@ exports.updateCourse = async (req, res, next) => {
           }
         );
 
-        // let preparedInput = categoryId.split(",");
+        // if (typeof categoryId === "string") {
+        //   preparedInput.push(+categoryId);
+        // } else {
+        //   categoryId.forEach(item => {
+        //     preparedInput.push(+item);
+        //   });
+        // }
+        let preparedInput = categoryId.split(',');
+        console.log(`preparedInput`, preparedInput);
+        const input = preparedInput.map(item => ({
+          courseId: +req.params.id,
+          categoryId: +item,
+        }));
 
-        // // if (typeof categoryId === "string") {
-        // //   preparedInput.push(+categoryId);
-        // // } else {
-        // //   categoryId.forEach(item => {
-        // //     preparedInput.push(+item);
-        // //   });
-        // // }
-        // const input = preparedInput.map(item => ({
-        //   courseId: courseResult.id,
-        //   categoryId: +item,
-        // }));
-
-        // const catmatch = await CourseCat.bulkCreate(input);
+        const catmatch = await CourseCat.bulkCreate(input);
         return res.json([rows]);
       } else {
         const [rows] = await Course.update(
@@ -263,27 +267,28 @@ exports.updateCourse = async (req, res, next) => {
           }
         );
 
-        // let preparedInput = categoryId.split(",");
+        let preparedInput = categoryId.split(',');
+        console.log(`preparedInput`, preparedInput);
 
-        // // if (typeof categoryId === "string") {
-        // //   preparedInput.push(+categoryId);
-        // // } else {
-        // //   categoryId.forEach(item => {
-        // //     preparedInput.push(+item);
-        // //   });
-        // // }
-        // const input = preparedInput.map(item => ({
-        //   courseId: courseResult.id,
-        //   categoryId: +item,
-        // }));
+        // if (typeof categoryId === "string") {
+        //   preparedInput.push(+categoryId);
+        // } else {
+        //   categoryId.forEach(item => {
+        //     preparedInput.push(+item);
+        //   });
+        // }
+        const input = preparedInput.map(item => ({
+          courseId: +req.params.id,
+          categoryId: +item,
+        }));
 
-        // const catmatch = await CourseCat.bulkCreate(input);
-        return res.status(200).json([rows]);
+        const catmatch = await CourseCat.bulkCreate(input);
+        return res.json([rows]);
       }
     }
     return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {
-    next(err.message);
+    next(err);
   }
 };
 

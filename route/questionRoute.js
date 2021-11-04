@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/", questionController.getAllQuestion);
 router.get("/:id", authenticate, questionController.getQuestionById);
+router.get("/quiz/:id", authenticate, questionController.getQuestionByQuizId);
 router.post("/", authenticate, questionController.createQuestion);
 router.put("/:id", authenticate, questionController.updateQuestion);
 router.delete("/:id", authenticate, questionController.deleteQuestion);

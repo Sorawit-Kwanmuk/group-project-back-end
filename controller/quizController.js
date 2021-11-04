@@ -9,19 +9,53 @@ const uploadPromise = utils.promisify(cloudinary.uploader.upload);
 exports.createQuiz = async (req, res, next) => {
   try {
     if (req.user.role === "admin") {
-      const { quizName, topicId, questionArray } = req.body;
+      const { quizName, score, topicId, questionArray } = req.body;
       const result = await Quiz.create({
         quizName,
         topicId,
+        score,
       });
+      console.log(`result`, req.body);
 
       //   const questionList = questionArray.map(item => {
       //     console.log(`item.question ----->`, item.question);
       //     return { ...item, quizId: result.id };
       //   });
+
       const questionList = questionArray.map(item => {
         return { ...item, quizId: result.id };
       });
+
+      const answer = questionArray.map(item => {
+        const correct = item.answerOptions.find(
+          item => item.isCorrect === true
+        );
+        // console.log(`questionList`, questionList);
+        const correctValue = correct.answerText;
+        console.log(`correct`, correctValue);
+        return {
+          question: item.questionText,
+          choiceA: item.answerOptions[0].answerText,
+          choiceB: item.answerOptions[1].answerText,
+          choiceC: item.answerOptions[2]?.answerText || null,
+          choiceD: item.answerOptions[3]?.answerText || null,
+          correct: correctValue,
+          quizId: result.id,
+        };
+      });
+
+      // const answerItem = answer.map(item => {
+      //   return item.answerOptions;
+      // });
+
+      console.log(`answer`, answer);
+      // console.log(`questionList`, questionList.answerOptions);
+
+      // const input = questionList.map(item => ({
+      //   quizId,
+      //   question : questionList.questionText,
+      //   choiceA: +item,
+      // })); -------------
 
       //   const withImage = questionList.filter(item => {
       //     return item.image !== undefined;
@@ -33,8 +67,16 @@ exports.createQuiz = async (req, res, next) => {
       //   console.log(`withoutImage --->`, withoutImage);
 
       //   if (withoutImage) {
-      const createQuestion = await Question.bulkCreate(questionList);
-      //   }
+
+      const mapQ = answer.map(item => {
+        return item.question;
+      });
+
+      console.log(`mapQ`, mapQ);
+
+      const createQuestion = await Question.bulkCreate(answer);
+
+      console.log(`createQuestion`, createQuestion);
 
       //   if (withImage) {
       //     const result = await uploadPromise(req.file.path);
@@ -63,18 +105,18 @@ exports.createQuiz = async (req, res, next) => {
         totalStage: currentStage + 1,
       });
 
-      const findQuiz = await Quiz.findOne({
-        where: { id: +result.id },
-      });
+      // const findQuiz = await Quiz.findOne({
+      //   where: { id: +result.id },
+      // });
 
-      const increaseScoreQuiz = await findQuiz.update({
-        score: findQuiz.score + questionList.length,
-      });
+      // const increaseScoreQuiz = await findQuiz.update({
+      //   score: findQuiz.score + questionList.length,
+      // });
 
       //   console.log(`increaseScoreQuiz`, increaseScoreQuiz);
       return res.json({ result, increase });
     }
-    return res.status(401).json({ message: 'you are unauthorized' });
+    return res.status(401).json({ message: "you are unauthorized" });
   } catch (error) {
     next(error);
   }
@@ -83,7 +125,7 @@ exports.createQuiz = async (req, res, next) => {
 exports.getAllQuiz = async (req, res, next) => {
   try {
     const result = await Quiz.findAll({
-      include: { model: Topic, attributes: ['topicName'] },
+      include: { model: Topic, attributes: ["topicName"] },
     });
     return res.json({ result });
   } catch (error) {
@@ -125,7 +167,7 @@ exports.updateQuiz = async (req, res, next) => {
 
       return res.json([rows]);
     }
-    return res.status(401).json({ message: 'you are unauthorized' });
+    return res.status(401).json({ message: "you are unauthorized" });
   } catch (error) {
     next(error.message);
   }
@@ -165,9 +207,9 @@ exports.deleteQuiz = async (req, res, next) => {
         return res.status(400).json({ message: "fail to delete Quiz" });
       }
 
-      return res.status(204).json({ message: 'Delete Successfully' });
+      return res.status(204).json({ message: "Delete Successfully" });
     }
-    return res.status(401).json({ message: 'you are unauthorized' });
+    return res.status(401).json({ message: "you are unauthorized" });
   } catch (error) {
     next(error.message);
   }
