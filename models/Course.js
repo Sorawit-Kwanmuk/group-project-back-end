@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Course = sequelize.define(
-    "Course",
+    'Course',
     {
       courseName: {
         type: DataTypes.STRING,
@@ -23,12 +23,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       level: {
-        type: DataTypes.ENUM([
-          "1 - Beginner",
-          "2 - Intermediate",
-          "3 - Expert",
-        ]),
-        defaultValue: "Beginner",
+        type: DataTypes.ENUM(['1.Beginner', '2.Intermediate', '3.Expert']),
+        defaultValue: '1.Beginner',
       },
       clip: {
         type: DataTypes.STRING,
@@ -78,8 +74,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: null,
       },
       status: {
-        type: DataTypes.ENUM(["ready", "notReady"]),
-        defaultValue: "notReady",
+        type: DataTypes.ENUM(['ready', 'notReady']),
+        defaultValue: 'notReady',
       },
     },
 
@@ -92,47 +88,47 @@ module.exports = (sequelize, DataTypes) => {
   Course.associate = models => {
     Course.hasMany(models.Topic, {
       foreignKey: {
-        name: "courseId",
+        name: 'courseId',
         allowNull: false,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
     });
 
     Course.hasMany(models.Promotion, {
       foreignKey: {
-        name: "courseId",
+        name: 'courseId',
         allowNull: true,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
     });
 
     Course.hasMany(models.CourseCat, {
       foreignKey: {
-        name: "courseId",
+        name: 'courseId',
         allowNull: false,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
     });
 
     Course.hasMany(models.Comment, {
       foreignKey: {
-        name: "courseId",
+        name: 'courseId',
         allowNull: false,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
     });
 
     Course.hasMany(models.MyCourse, {
       foreignKey: {
-        name: "courseId",
+        name: 'courseId',
         allowNull: false,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
     });
   };
 
