@@ -16,6 +16,16 @@ exports.createTopic = async (req, res, next) => {
         courseId,
         instructorId,
       });
+
+      const CourseIncreaseStage = await Course.findOne({
+        where: { id: result.courseId },
+      });
+
+      const currentStage = CourseIncreaseStage.totalStage;
+      const increase = await CourseIncreaseStage.update({
+        totalStage: currentStage + 1,
+      });
+
       return res.json({ result });
     }
     return res.status(401).json({ message: "you are unauthorized" });
@@ -113,12 +123,27 @@ exports.updateTopic = async (req, res, next) => {
 exports.deleteTopic = async (req, res, next) => {
   try {
     const { id } = req.params;
+
     if (req.user.role === "admin") {
+      const findTop = await Topic.findOne({ where: { id } });
+      const topicCourse = +findTop.courseId;
+      const CourseDecreaseStage = await Course.findOne({
+        where: { id: +topicCourse },
+      });
+      const currentStage = CourseDecreaseStage.totalStage;
+
+      console.log(`CourseIncreaseStage`, CourseDecreaseStage);
+
+      const decrease = await CourseDecreaseStage.update({
+        totalStage: currentStage - 1,
+      });
+
       const rows = await Topic.destroy({
         where: {
           id,
         },
       });
+
       // console.log(rows);
       if (rows === 0) {
         return res.status(400).json({ message: "fail to delete Topic" });

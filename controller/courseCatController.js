@@ -27,7 +27,10 @@ exports.getCourseCatByCourse = async (req, res, next) => {
 exports.getCourseCatByCat = async (req, res, next) => {
   try {
     const { categoryId } = req.params;
-    const result = await CourseCat.findAll({ where: { categoryId } });
+    const result = await CourseCat.findAll({
+      where: { categoryId },
+      include: [{ model: Course }, { model: Category }],
+    });
     res.json({ result });
   } catch (err) {
     next(err);
