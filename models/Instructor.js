@@ -97,8 +97,8 @@ module.exports = (sequelize, DataTypes) => {
         name: "instructorId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
 
     Instructor.hasMany(models.Topic, {
@@ -106,8 +106,8 @@ module.exports = (sequelize, DataTypes) => {
         name: "instructorId",
         allowNull: true,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
   };
 

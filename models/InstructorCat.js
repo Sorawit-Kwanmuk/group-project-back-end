@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
+      paranoid: true,
     }
   );
 
@@ -22,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
         name: "categoryId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
 
     InstructorCat.belongsTo(models.Instructor, {
@@ -31,8 +32,8 @@ module.exports = (sequelize, DataTypes) => {
         name: "instructorId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
   };
 

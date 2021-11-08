@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
-      paranoid: false,
+      paranoid: true,
     }
   );
 

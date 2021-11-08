@@ -11,22 +11,25 @@ exports.createSubTopic = async (req, res, next) => {
         topicId,
       });
 
-      const findTopic = await Topic.findOne({ where: { id: topicId } });
-      const topicCourse = +findTopic.courseId;
-      console.log(`findTopic`, findTopic);
-      console.log(`topicCourse`, topicCourse);
-      const CourseIncreaseStage = await Course.findOne({
-        where: { id: +topicCourse },
+      // const findTopic = await Topic.findOne({ where: { id: topicId } });
+      // const topicCourse = +findTopic.courseId;
+      // console.log(`findTopic`, findTopic);
+      // console.log(`topicCourse`, topicCourse);
+      // const CourseIncreaseStage = await Course.findOne({
+      //   where: { id: +topicCourse },
+      // });
+      // const currentStage = CourseIncreaseStage.totalStage;
+
+      // console.log(`CourseIncreaseStage`, CourseIncreaseStage);
+
+      // const increase = await CourseIncreaseStage.update({
+      //   totalStage: currentStage + 1,
+      // });
+
+      return res.json({
+        result,
+        // , increase
       });
-      const currentStage = CourseIncreaseStage.totalStage;
-
-      console.log(`CourseIncreaseStage`, CourseIncreaseStage);
-
-      const increase = await CourseIncreaseStage.update({
-        totalStage: currentStage + 1,
-      });
-
-      return res.json({ result, increase });
     }
     return res.status(401).json({ message: "you are unauthorized" });
   } catch (error) {
@@ -46,6 +49,16 @@ exports.getAllSubTopic = async (req, res, next) => {
 };
 
 exports.getSubTopicById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await SubTopic.findAll({ where: { topicId: id } });
+    res.json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getSubTopicByTopicId = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await SubTopic.findAll({ where: { topicId: id } });
@@ -86,25 +99,25 @@ exports.deleteSubTopic = async (req, res, next) => {
   try {
     const { id } = req.params;
     if (req.user.role === "admin") {
-      const findSub = await SubTopic.findOne({ where: { id } });
+      // const findSub = await SubTopic.findOne({ where: { id } });
 
-      console.log(`findSub`, findSub);
-      const findTopic = await Topic.findOne({ where: { id: findSub.topicId } });
-      console.log(`findTopic`, findTopic);
-      const topicCourse = +findTopic.courseId;
+      // console.log(`findSub`, findSub);
+      // const findTopic = await Topic.findOne({ where: { id: findSub.topicId } });
+      // console.log(`findTopic`, findTopic);
+      // const topicCourse = +findTopic.courseId;
 
-      console.log(`topicCourse`, topicCourse);
-      const CourseDecreaseStage = await Course.findOne({
-        where: { id: +topicCourse },
-      });
-      const currentStage = CourseDecreaseStage.totalStage;
+      // console.log(`topicCourse`, topicCourse);
+      // const CourseDecreaseStage = await Course.findOne({
+      //   where: { id: +topicCourse },
+      // });
+      // const currentStage = CourseDecreaseStage.totalStage;
 
-      console.log(`CourseIncreaseStage`, CourseDecreaseStage);
+      // console.log(`CourseIncreaseStage`, CourseDecreaseStage);
 
-      const decrease = await CourseDecreaseStage.update({
-        totalStage: currentStage - 1,
-      });
-      console.log(`decrease`, decrease);
+      // const decrease = await CourseDecreaseStage.update({
+      //   totalStage: currentStage - 1,
+      // });
+      // console.log(`decrease`, decrease);
 
       const rows = await SubTopic.destroy({
         where: {
