@@ -87,7 +87,7 @@ exports.getCourseById = async (req, res, next) => {
     const { id } = req.params;
     const courseResult = await Course.findOne({
       where: { id },
-      include: { model: Topic, include: { model: Instructor } },
+      include: { model: Topic, include: { model: Instructor, group: 'id' } },
     });
     res.status(200).json({ courseResult });
   } catch (error) {
