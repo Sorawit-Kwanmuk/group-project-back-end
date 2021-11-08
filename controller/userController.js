@@ -48,7 +48,7 @@ exports.updateUserDetail = async (req, res, next) => {
 };
 
 exports.updateUserImage = async (req, res, next) => {
-  console.log(req.file);
+  // console.log(req.file);
   try {
     const { profileImage } = req.body;
     const user = await User.findOne({ where: { id: req.user.id } });

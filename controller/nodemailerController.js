@@ -25,7 +25,7 @@ exports.sendEmail = async (req, res, next) => {
     // };
 
     const findEmail = await User.findOne({ where: { email: emailInput } });
-    console.log(`findEmail`, findEmail);
+    // console.log(`findEmail`, findEmail);
 
     if (findEmail) {
       const result = await transporter.sendMail(

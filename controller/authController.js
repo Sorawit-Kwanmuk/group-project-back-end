@@ -5,6 +5,7 @@ const CustomError = require('../utils/error');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const router = require('../route/authRoute');
+const { log } = require('console');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -80,7 +81,6 @@ exports.login = async (req, res, next) => {
     // console.log(`username`, username);
     // console.log(`password`, password);
     const user = await User.findOne({ where: { username: username } });
-    // console.log(`user`, user);
     if (!user) {
       return res.status(400).json({ message: 'invalid username or password' });
     }
@@ -103,6 +103,47 @@ exports.login = async (req, res, next) => {
     res.json({ message: 'success logged in', token });
   } catch (err) {
     next(err.message);
+  }
+};
+exports.googleLogin = async (req, res, next) => {
+  // console.log(`req`, req.body);
+  try {
+    const { googleId, googleEmail, googleName } = req.body;
+    const dataUser = await User.findAll({});
+    const newArr = dataUser.map(item => item.dataValues.googleId);
+    // console.log('dataUser: ', newArr);
+    if (newArr.includes(googleId) === false) {
+      const hashedPassword = await bcrypt.hash(googleEmail, 12);
+      await User.create({
+        username: googleName,
+        fullName: googleName,
+        email: googleEmail,
+        birthDate: new Date(),
+        mobileNo: '',
+        googleId,
+        googleName,
+        googleEmail,
+        password: hashedPassword,
+      });
+    }
+    const user = await User.findOne({ where: { googleId: googleId } });
+    // console.log('1');
+    if (!user) {
+      return res.status(400).json({ message: 'invalid username or password' });
+    }
+
+    const payload = {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+      expiresIn: '30d',
+    }); // '30d'
+    res.status(200).json({ message: 'success logged in', token });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -141,10 +182,10 @@ exports.newPassword = (req, res, next) => {
     where: { resetToken: token },
   }).then(user => {
     if (!user) {
-      console.log(`user`, user);
+      // console.log(`user`, user);
       return res.status(422).json({ error: 'Try Again Session Expire' });
     }
-    console.log(`user`, user);
+    // console.log(`user`, user);
     bcrypt.hash(newPassword, 12).then(hashedPassword => {
       (user.password = hashedPassword),
         (user.resetToken = undefined),

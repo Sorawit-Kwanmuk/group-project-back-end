@@ -1,4 +1,4 @@
-const { Question } = require("../models");
+const { Question } = require('../models');
 
 exports.getAllQuestion = async (req, res, next) => {
   try {
@@ -11,7 +11,7 @@ exports.getAllQuestion = async (req, res, next) => {
 
 exports.createQuestion = async (req, res, next) => {
   try {
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const {
         question,
         choiceA,
@@ -34,7 +34,7 @@ exports.createQuestion = async (req, res, next) => {
       });
       return res.json({ result });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error);
   }
@@ -65,7 +65,7 @@ exports.updateQuestion = async (req, res, next) => {
     const { id } = req.params;
     const { question, choiceA, choiceB, choiceC, choiceD, image, correct } =
       req.body;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const [rows] = await Question.update(
         {
           question,
@@ -85,7 +85,7 @@ exports.updateQuestion = async (req, res, next) => {
 
       return res.json([rows]);
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error);
   }
@@ -94,20 +94,20 @@ exports.updateQuestion = async (req, res, next) => {
 exports.deleteQuestion = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const rows = await Question.destroy({
         where: {
           id,
         },
       });
-      console.log(rows);
+      // console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete Topic" });
+        return res.status(400).json({ message: 'fail to delete Topic' });
       }
 
-      return res.status(204).json({ message: "Delete Successfully" });
+      return res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }

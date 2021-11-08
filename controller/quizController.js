@@ -15,7 +15,7 @@ exports.createQuiz = async (req, res, next) => {
         topicId,
         score,
       });
-      console.log(`result`, req.body);
+      // console.log(`result`, req.body);
 
       //   const questionList = questionArray.map(item => {
       //     console.log(`item.question ----->`, item.question);
@@ -32,7 +32,7 @@ exports.createQuiz = async (req, res, next) => {
         );
         // console.log(`questionList`, questionList);
         const correctValue = correct.answerText;
-        console.log(`correct`, correctValue);
+        // console.log(`correct`, correctValue);
         return {
           question: item.questionText,
           choiceA: item.answerOptions[0].answerText,
@@ -48,7 +48,7 @@ exports.createQuiz = async (req, res, next) => {
       //   return item.answerOptions;
       // });
 
-      console.log(`answer`, answer);
+      // console.log(`answer`, answer);
       // console.log(`questionList`, questionList.answerOptions);
 
       // const input = questionList.map(item => ({
@@ -72,11 +72,11 @@ exports.createQuiz = async (req, res, next) => {
         return item.question;
       });
 
-      console.log(`mapQ`, mapQ);
+      // console.log(`mapQ`, mapQ);
 
       const createQuestion = await Question.bulkCreate(answer);
 
-      console.log(`createQuestion`, createQuestion);
+      // console.log(`createQuestion`, createQuestion);
 
       //   if (withImage) {
       //     const result = await uploadPromise(req.file.path);

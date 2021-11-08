@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    "User",
+    'User',
     {
       fullName: {
         type: DataTypes.STRING,
@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       birthDate: {
         type: DataTypes.DATEONLY,
-        allowNull: false,
+        allowNull: true,
       },
       profileImage: {
         type: DataTypes.STRING,
@@ -17,17 +17,14 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        // unique: true,
         validate: {
           isEmail: true,
         },
       },
       mobileNo: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          isNumeric: true,
-        },
+        allowNull: true,
       },
       username: {
         type: DataTypes.STRING,
@@ -38,10 +35,22 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      googleId: {
+        type: DataTypes.STRING,
+      },
+      googleEmail: {
+        type: DataTypes.STRING,
+      },
+      googleName: {
+        type: DataTypes.STRING,
+      },
+      googleImage: {
+        type: DataTypes.STRING,
+      },
       role: {
         type: DataTypes.ENUM,
-        values: ["guest", "user", "admin"],
-        defaultValue: "user",
+        values: ['guest', 'user', 'admin'],
+        defaultValue: 'user',
       },
 
       resetToken: {
@@ -61,38 +70,38 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = models => {
     User.hasMany(models.MyCourse, {
       foreignKey: {
-        name: "userId",
+        name: 'userId',
         allowNull: true,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
     });
 
     User.hasMany(models.UserQuiz, {
       foreignKey: {
-        name: "userId",
+        name: 'userId',
         allowNull: true,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
     });
 
     User.hasMany(models.UserAns, {
       foreignKey: {
-        name: "userId",
+        name: 'userId',
         allowNull: true,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
     });
 
     User.hasMany(models.Comment, {
       foreignKey: {
-        name: "userId",
+        name: 'userId',
         allowNull: true,
       },
-      onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
     });
 
     // User.hasMany(models.Feedback, {

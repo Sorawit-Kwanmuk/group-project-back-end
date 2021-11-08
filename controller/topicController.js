@@ -5,11 +5,11 @@ const {
   SubTopic,
   Quiz,
   Question,
-} = require("../models");
+} = require('../models');
 
 exports.createTopic = async (req, res, next) => {
   try {
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const { topicName, courseId, instructorId } = req.body;
       const result = await Topic.create({
         topicName,
@@ -28,7 +28,7 @@ exports.createTopic = async (req, res, next) => {
 
       return res.json({ result });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error);
   }
@@ -98,7 +98,7 @@ exports.updateTopic = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { topicName, courseId, instructorId } = req.body;
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const [rows] = await Topic.update(
         {
           topicName,
@@ -114,7 +114,7 @@ exports.updateTopic = async (req, res, next) => {
 
       return res.json({ topicName, courseId, instructorId });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }
@@ -124,7 +124,7 @@ exports.deleteTopic = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    if (req.user.role === "admin") {
+    if (req.user.role === 'admin') {
       const findTop = await Topic.findOne({ where: { id } });
       const topicCourse = +findTop.courseId;
       const CourseDecreaseStage = await Course.findOne({
@@ -132,7 +132,7 @@ exports.deleteTopic = async (req, res, next) => {
       });
       const currentStage = CourseDecreaseStage.totalStage;
 
-      console.log(`CourseIncreaseStage`, CourseDecreaseStage);
+      // console.log(`CourseIncreaseStage`, CourseDecreaseStage);
 
       const decrease = await CourseDecreaseStage.update({
         totalStage: currentStage - 1,
@@ -146,12 +146,12 @@ exports.deleteTopic = async (req, res, next) => {
 
       // console.log(rows);
       if (rows === 0) {
-        return res.status(400).json({ message: "fail to delete Topic" });
+        return res.status(400).json({ message: 'fail to delete Topic' });
       }
 
-      return res.status(204).json({ message: "Delete Successfully" });
+      return res.status(204).json({ message: 'Delete Successfully' });
     }
-    return res.status(401).json({ message: "you are unauthorized" });
+    return res.status(401).json({ message: 'you are unauthorized' });
   } catch (error) {
     next(error.message);
   }

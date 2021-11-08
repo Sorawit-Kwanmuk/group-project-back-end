@@ -1,4 +1,4 @@
-const { MyCourse, Course } = require("../models");
+const { MyCourse, Course } = require('../models');
 
 exports.getAllMyCourse = async (req, res, next) => {
   const result = await MyCourse.findAll({ include: { model: Course } });
@@ -29,7 +29,7 @@ exports.getAllMyCourseById = async (req, res, next) => {
 exports.getPersonalMyCourseById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(`id`, id);
+    // console.log(`id`, id);
     const result = await MyCourse.findOne({
       where: { id },
       include: { model: Course },
@@ -44,7 +44,7 @@ exports.getPersonalMyCourseById = async (req, res, next) => {
 exports.updatePersonalMyCourse = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(`id--->`, id);
+    // console.log(`id--->`, id);
     // const find = await MyCourse.findAll({
     //   where: { userId: req.user.id },
     //   include: { model: Course },
@@ -54,25 +54,25 @@ exports.updatePersonalMyCourse = async (req, res, next) => {
       where: { id },
     });
 
-    console.log(`find ----------->`, find);
+    // console.log(`find ----------->`, find);
     const findStage = find.dataValues.currentStage;
-    console.log(`findStage ------>`, findStage);
+    // console.log(`findStage ------>`, findStage);
 
     const findId = find.id;
 
-    console.log(`findId->>>`, findId);
+    // console.log(`findId->>>`, findId);
     const result = await MyCourse.update(
       {
         currentStage: findStage + 1,
       },
       { where: { id: findId } }
     );
-    console.log(`result`, result);
-    console.log(`result--->`, result);
+    // console.log(`result`, result);
+    // console.log(`result--->`, result);
     if (findStage === find.totalStage - 1) {
       const updateStatus = MyCourse.update(
         {
-          status: "completed",
+          status: 'completed',
         },
         { where: { id: findId } }
       );

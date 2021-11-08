@@ -16,9 +16,9 @@ exports.createComment = async (req, res, next) => {
       where: { id: { [Op.or]: mapTopic } },
     });
 
-    console.log(`findTopic`, findTopic);
-    console.log(`mapTopic`, mapTopic);
-    console.log(`findins`, findIns);
+    // console.log(`findTopic`, findTopic);
+    // console.log(`mapTopic`, mapTopic);
+    // console.log(`findins`, findIns);
 
     const result = await Comment.create({
       userId: req.user.id,
@@ -53,9 +53,9 @@ exports.createComment = async (req, res, next) => {
 
       insUpdate.ratingTotal = +insUpdate.ratingTotal + +result.rating;
 
-      console.log(`insUpdate`, insUpdate.rating);
-      console.log(`insUpdate`, insUpdate.ratingTotal);
-      console.log(`insUpdate`, result.rating);
+      // console.log(`insUpdate`, insUpdate.rating);
+      // console.log(`insUpdate`, insUpdate.ratingTotal);
+      // console.log(`insUpdate`, result.rating);
       insUpdate.save();
     });
 
