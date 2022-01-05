@@ -201,12 +201,12 @@ exports.updateCourse = async (req, res, next) => {
       discountRate,
       discountUntil,
       categoryId,
+      status,
     } = req.body;
-    // console.log(`req.body`, req.body);
+    console.log(`req.body`, req.body);
 
     if (req.user.role === 'admin') {
       const result = await uploadPromise(req.file.path);
-
       if (discountUntil === 'null') {
         const [rows] = await Course.update(
           {
@@ -221,6 +221,7 @@ exports.updateCourse = async (req, res, next) => {
             courseImage: result.secure_url,
             discountRate,
             discountUntil: null,
+            status,
           },
           {
             where: {
@@ -236,9 +237,9 @@ exports.updateCourse = async (req, res, next) => {
         //     preparedInput.push(+item);
         //   });
         // }
-        let preparedInput = categoryId.split(',');
+        let preparedInput = categoryId?.split(',');
         // console.log(`preparedInput`, preparedInput);
-        const input = preparedInput.map(item => ({
+        const input = preparedInput?.map(item => ({
           courseId: +req.params.id,
           categoryId: +item,
         }));
@@ -259,6 +260,7 @@ exports.updateCourse = async (req, res, next) => {
             courseImage: result.secure_url,
             discountRate,
             discountUntil,
+            status,
           },
           {
             where: {
@@ -267,7 +269,7 @@ exports.updateCourse = async (req, res, next) => {
           }
         );
 
-        let preparedInput = categoryId.split(',');
+        let preparedInput = categoryId?.split(',');
         // console.log(`preparedInput`, preparedInput);
 
         // if (typeof categoryId === "string") {
@@ -277,7 +279,7 @@ exports.updateCourse = async (req, res, next) => {
         //     preparedInput.push(+item);
         //   });
         // }
-        const input = preparedInput.map(item => ({
+        const input = preparedInput?.map(item => ({
           courseId: +req.params.id,
           categoryId: +item,
         }));
@@ -285,6 +287,32 @@ exports.updateCourse = async (req, res, next) => {
         const catmatch = await CourseCat.bulkCreate(input);
         return res.json([rows]);
       }
+    }
+    return res.status(401).json({ message: 'you are unauthorized' });
+  } catch (err) {
+    next(err);
+  }
+};
+exports.updateCourseStatus = async (req, res, next) => {
+  // console.log(`req.body`, req.body);
+  try {
+    const { id } = req.params;
+    // console.log(`req.params`, req.params);
+    const { status } = req.body;
+    console.log(`req.body`, req.body);
+
+    if (req.user.role === 'admin') {
+      const [rows] = await Course.update(
+        {
+          status,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+      return res.json([rows]);
     }
     return res.status(401).json({ message: 'you are unauthorized' });
   } catch (err) {

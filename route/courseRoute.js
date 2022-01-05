@@ -33,5 +33,6 @@ router.put(
   upload.single('thisisinput'),
   courseController.updateCourse
 );
+router.put('/status/:id', authenticate, courseController.updateCourseStatus);
 router.delete('/:id', authenticate, courseController.deleteCourse);
 module.exports = router;
